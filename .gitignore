@@ -1,0 +1,7 @@
+.idea/
+*.egg-info/
+dist/
+build/
+
+nlopt/nlopt.dll
+nlopt/_nlopt.pyd
