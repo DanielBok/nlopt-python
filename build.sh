@@ -2,10 +2,14 @@
 
 set -e -x
 
-APP_DIR="${APP_DIR:-/}"
+# things to note: the /tmp folder is a shared volume with the git repository of
+# the checked out codes on travis. Thus you will see things /tmp/setup.py,
+# /tmp/nlopt/*, etc.
+
 PY_VER="${PY_VER:-37}"
 PATH=/opt/python/cp${PY_VER}-cp${PY_VER}m/bin:$PATH
 
+# Go to root and setup nlopt
 cd /
 NL_SRC=_nlopt_
 git clone https://github.com/stevengj/nlopt ${NL_SRC}
@@ -13,8 +17,9 @@ PREFIX=/${NL_SRC}/install
 
 cd ${NL_SRC}/
 mkdir build && cd build
-pip install numpy
+pip install numpy  # numpy is needed to generate python code
 
+# generate the python codes
 cmake -DCMAKE_PREFIX_PATH=${PREFIX} \
     -DCMAKE_INSTALL_PREFIX=${PREFIX} \
     -DCMAKE_INSTALL_LIBDIR=lib \
@@ -25,24 +30,22 @@ cmake -DCMAKE_PREFIX_PATH=${PREFIX} \
     -DPYTHON_LIBRARY=$(python -c "import distutils.sysconfig as sysconfig; print(sysconfig.get_config_var('LIBDIR'))") \
     ..
 
+# generate the .so binaries
 make install
 
+# copies the generated binaries and python codes to the tmp folder
 # cp which ignores the "cp -i" interactive option set in the .bashrc
-\cp -f /${NL_SRC}/install/lib/python3.7/site-packages/* ${APP_DIR}/nlopt/
+\cp -f ${PREFIX}/lib/python3.7/site-packages/* /tmp/nlopt/
 
 PLAT=manylinux2010_x86_64
 
+cd /tmp
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" wheel /nlopt-python -w wheelhouse/
+    "${PYBIN}/pip" wheel /tmp -w wheelhouse/
 done
 
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/*.whl; do
-    auditwheel repair "$whl" --plat ${PLAT} -w /nlopt-python/wheelhouse/
-done
-
-# Install packages and test
-for PYBIN in /opt/python/*/bin/; do
-    "${PYBIN}/pip" install nlopt --no-index -f /nlopt-python/wheelhouse
+    auditwheel repair "$whl" --plat ${PLAT} -w /tmp/wheelhouse/
 done
