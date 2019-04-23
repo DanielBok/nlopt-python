@@ -1,0 +1,28 @@
+notifications:
+  email: false
+
+sudo: required
+services:
+  - docker
+
+branches:
+  only:
+    - master
+    - /\d*\.\d*\.\d*/
+
+env:
+  global:
+    - DOCKER_IMAGE=danielbok/manylinux2010_x86_64
+    - PLAT=manylinux2010_x86_64
+    - secure: uQ3W6PbZrD6el9mW4TOyZppWtzD8j/UuIRfAwLO4rZDcBQ4G0YM2cdnMV4Gf8EG9+R416whHniHqnNdaX2qfUMKMsdO29jl1v4jB3xzGj4kDm9NFIQThDFnw5HuywSq2qMP1AKd0c4MMqsY7qw8WXkTrKZU2ykDB3zoEdjbj1DoVVIzuk5iQqt5h5sUu67Wa9jvVR9xh+n3kLlYk3RDMms3ZqVbGgR3RvNQqeSKmm9aGrHKfYqkWQr7oFl7+dcf2Sc+CcbcwrmBwpeA/Rhl+ZlBUhBWlWfsZew+SQCzsBO+l5wQdKbX8Chl/U77tMPio/6pThSHsO6D0PG6ne+WRj10O5DrEEnErHcoX/9DbT+zACE0/Dg0lujceMOZpL2+V+aBMlCtkJU7cH0vnJiOdVRZbumEUsLiFEDO1zrlgVyKLr6IYnHbBfP58srY5flYw7OuafNQ++Hi2A2Mcwe03IyuIA5y1/CkXWdMgz+xBa6RulKRtnGOKCXSAwCkiwwGEpxQ6fMcRpTh6KxYSx1xukRfiNFbNTeXrBkh5q3dfQBjDm2BHl8Y79ZwHKjaEx2/vh+e5BgN8WMBuSFDkSN2Xu538bosi3t7QmK9mGIA5my8E6GOv6mIuJd6nElchh4VCy2oKOsldr+Pu3Bf8YUC0rXaBwROcm0eNvOD3I3SnggU=
+    - secure: HdrQhOHOYaqv/cABe3SImUQPA7i8x2zA/goYShtXc11VCFeWfuiwN3QnAT6jLbvXfZgWCTDSsD0IwDw3+w1gpjzjWqijKyHZjhSWYLiPtcL5neo1GR91863unJ11gzimc7P5ZJ+xZf24lR9sOb5JPfQKSC9zHz1NM/a5F7+2HpkS2GBWnLnX32QSfUiVCiJZkUF+C4S/0kgLxFmZTdi9ASJsgkNLg2/d5vtRnbZDHPhQwmk86hPyvR4yx7l+LmPzJ9ZUEKbJohwZWLVmGL+ueUVsFx9OSfS7h7OTx9TU9Gw2/GatRhF4BYVj/ADLwo/ETAb2kWmz6BetdlN2aLkvX8fU072H5KJyoklDKNk/8sZdM1wWFT55m0nUyNYwQLdMa2NKOt4HgXEeUCe7s+kdIV9A/lkvYwrzRtkOalApCE9bAXYEkE+hXxrHTWMiyGJCUGMuDMRydSYD3L8laA7SNTKj4hY9oo/p5vlsIWd5bxnubkbmFqzmiGhc4LcZz/3DbtEhBgJIlvBUIrYB17Y6HWZqrcKb2/O9+PdMagu8pSQEG6PF7b8PFcPOmS8d0Z+C0Rg6sR1TOUMiVQ9i9kHwqSF5ur/XzBFBFMNcjpVoVyLyG6KP1I/NIb9wIfhNKl746POq/9r6LTaBj1MOpGYoRnMIJyZpPbnYyjm9GdWDTOs=
+
+install:
+  - docker pull $DOCKER_IMAGE
+
+script:
+  - docker run --rm -e PLAT=$PLAT -e APP_DIR=$TRAVIS_BUILD_DIR -v `pwd`:/ $DOCKER_IMAGE $TRAVIS_BUILD_DIR/build.sh
+  - pip install twine
+  - rm -rf /tmp/*
+  - find /nlopt-python/wheelhouse/ -name "nlopt*-py3-*-manylinux*.whl" -exec cp {} /tmp \;
+  - twine upload --verbose -u $env:PYPI_USERNAME -p $env:PYPI_PASSWORD tmp/*
