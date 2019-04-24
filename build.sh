@@ -11,11 +11,11 @@ PATH=/opt/python/cp${PY_VER}-cp${PY_VER}m/bin:$PATH
 
 # Go to root and setup nlopt
 cd /
-NL_SRC=_nlopt_
+NL_SRC=/stevengj/nlopt
 git clone https://github.com/stevengj/nlopt ${NL_SRC}
-PREFIX=/${NL_SRC}/install
+PREFIX=${NL_SRC}/install
 
-cd ${NL_SRC}/
+cd ${NL_SRC}
 mkdir build && cd build
 pip install numpy  # numpy is needed to generate python code
 
@@ -31,21 +31,22 @@ cmake -DCMAKE_PREFIX_PATH=${PREFIX} \
     ..
 
 # generate the .so binaries
+make
 make install
 
 # copies the generated binaries and python codes to the tmp folder
 # cp which ignores the "cp -i" interactive option set in the .bashrc
-\cp -f ${PREFIX}/lib/python3.7/site-packages/* /tmp/nlopt/
+\cp -f ${PREFIX}/lib/python3.7/site-packages/* /app/nlopt/
 
 PLAT=manylinux2010_x86_64
 
-cd /tmp
+cd /app
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" wheel /tmp -w wheelhouse/
+    "${PYBIN}/pip" wheel /app -w wheelhouse/
 done
 
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/*.whl; do
-    auditwheel repair "$whl" --plat ${PLAT} -w /tmp/wheelhouse/
+    auditwheel repair "$whl" --plat ${PLAT} -w /app/wheelhouse/
 done
