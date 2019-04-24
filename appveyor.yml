@@ -71,9 +71,6 @@ artifacts:
     name: pypi artifacts
 
 deploy_script:
-  - ps: |
-      if ($env:appveyor_repo_tag -eq $true) {
-        ECHO "Starting wheel deployment"
-        twine upload --verbose --skip-existing -u $env:PYPI_USERNAME -p $env:PYPI_PASSWORD dist/*
-        ECHO "Finished wheel deployment"
-      }
+  - ECHO "Starting wheel deployment"
+  - twine upload --verbose --skip-existing -u $env:PYPI_USERNAME -p $env:PYPI_PASSWORD dist/*
+  - ECHO "Finished wheel deployment"
