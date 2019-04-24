@@ -345,6 +345,7 @@ FTOL_REACHED = _nlopt.FTOL_REACHED
 XTOL_REACHED = _nlopt.XTOL_REACHED
 MAXEVAL_REACHED = _nlopt.MAXEVAL_REACHED
 MAXTIME_REACHED = _nlopt.MAXTIME_REACHED
+NUM_RESULTS = _nlopt.NUM_RESULTS
 class roundoff_limited(Exception):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, roundoff_limited, name, value)

@@ -12,7 +12,7 @@ build:
 clean:
 	rm -rf build dist *.egg-info
 	rm -f nlopt/_nlopt.* nlopt/*.dll
-	rm -rf wheelhouse
+	rm -rf wheelhouse nlopt_src
 
 repub:
 	git tag --delete $(VERSION)
