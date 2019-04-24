@@ -7,15 +7,18 @@ set -e -x
 # /tmp/nlopt/*, etc.
 
 PY_VER="${PY_VER:-37}"
+PLAT=${PLAT:-manylinux2010_x86_64}
 PATH=/opt/python/cp${PY_VER}-cp${PY_VER}m/bin:$PATH
+NLOPT_TAG=v2.6.1
 
 # Go to root and setup nlopt
 cd /
 NL_SRC=/stevengj/nlopt
-git clone https://github.com/stevengj/nlopt ${NL_SRC}
 PREFIX=${NL_SRC}/install
 
+git clone https://github.com/stevengj/nlopt ${NL_SRC}
 cd ${NL_SRC}
+git checkout ${NLOPT_TAG}
 mkdir build && cd build
 pip install numpy  # numpy is needed to generate python code
 
@@ -31,22 +34,21 @@ cmake -DCMAKE_PREFIX_PATH=${PREFIX} \
     ..
 
 # generate the .so binaries
-make
-make install
+make && make install
 
 # copies the generated binaries and python codes to the tmp folder
 # cp which ignores the "cp -i" interactive option set in the .bashrc
 \cp -f ${PREFIX}/lib/python3.7/site-packages/* /app/nlopt/
 
-PLAT=manylinux2010_x86_64
-
-cd /app
 # Compile wheels
-for PYBIN in /opt/python/*/bin; do
-    "${PYBIN}/pip" wheel /app -w wheelhouse/
+for PY_VER in "36" "37"; do
+    "/opt/python/cp${PY_VER}-cp${PY_VER}m/bin/pip" wheel /app -w wheelhouse/
 done
 
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/*.whl; do
     auditwheel repair "$whl" --plat ${PLAT} -w /app/wheelhouse/
 done
+
+# remove all numpy wheels, keep only many linux wheel
+rm -f /app/wheelhouse/numpy*.whl nlopt-*-py*-any.whl

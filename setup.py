@@ -32,6 +32,7 @@ setup(
     install_requires=install_requires,
     url='https://nlopt.readthedocs.io/en/latest/',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     maintainer='Daniel Bok',
     maintainer_email='daniel.bok@outlook.com',
     classifiers=[
@@ -40,7 +41,7 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Operating System :: MacOS',
         'Operating System :: Microsoft :: Windows',
-        'Operating System :: Unix'
+        'Operating System :: Unix',
         'Programming Language :: C++',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',

@@ -16,6 +16,7 @@ clean:
 
 repub:
 	git tag --delete $(VERSION)
-	git tag -a $(VERSION) -m "NLOpt $(VERSION)"
+	git push --delete origin $(VERSION)
+	git tag $(VERSION)
 	git push -f
 	git push -f --tags

@@ -59,7 +59,12 @@ install:
   - cp install\bin\nlopt.dll %APPVEYOR_BUILD_FOLDER%\nlopt\nlopt.dll
   - cp install\lib\site-packages\_nlopt.pyd %APPVEYOR_BUILD_FOLDER%\nlopt\_nlopt.pyd
   - cp install\lib\site-packages\nlopt.py %APPVEYOR_BUILD_FOLDER%\nlopt\nlopt.py
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - rmdir /S /Q %CLONE_DIR%
 
+build_script:
+  - ECHO "BUILDING WHEELS..."
+  - python setup.py bdist_wheel -p win_amd64 --python-tag $env:PYTHON_TAG
 
 artifacts:
   - path: dist\*
@@ -68,9 +73,7 @@ artifacts:
 deploy_script:
   - ps: |
       if ($env:appveyor_repo_tag -eq $true) {
-        ECHO "BUILDING WHEELS..."
-        python setup.py bdist_wheel -p win_amd64 --python-tag $env:PYTHON_TAG
         ECHO "Starting wheel deployment"
-        twine upload --verbose -u $env:PYPI_USERNAME -p $env:PYPI_PASSWORD dist/*
+        twine upload --verbose --skip-existing -u $env:PYPI_USERNAME -p $env:PYPI_PASSWORD dist/*
         ECHO "Finished wheel deployment"
       }

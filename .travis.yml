@@ -1,6 +1,3 @@
-notifications:
-  email: false
-
 sudo: required
 services:
   - docker
@@ -14,8 +11,8 @@ env:
   global:
     - DOCKER_IMAGE=danielbok/manylinux2010_x86_64
     - PLAT=manylinux2010_x86_64
-    - secure: uQ3W6PbZrD6el9mW4TOyZppWtzD8j/UuIRfAwLO4rZDcBQ4G0YM2cdnMV4Gf8EG9+R416whHniHqnNdaX2qfUMKMsdO29jl1v4jB3xzGj4kDm9NFIQThDFnw5HuywSq2qMP1AKd0c4MMqsY7qw8WXkTrKZU2ykDB3zoEdjbj1DoVVIzuk5iQqt5h5sUu67Wa9jvVR9xh+n3kLlYk3RDMms3ZqVbGgR3RvNQqeSKmm9aGrHKfYqkWQr7oFl7+dcf2Sc+CcbcwrmBwpeA/Rhl+ZlBUhBWlWfsZew+SQCzsBO+l5wQdKbX8Chl/U77tMPio/6pThSHsO6D0PG6ne+WRj10O5DrEEnErHcoX/9DbT+zACE0/Dg0lujceMOZpL2+V+aBMlCtkJU7cH0vnJiOdVRZbumEUsLiFEDO1zrlgVyKLr6IYnHbBfP58srY5flYw7OuafNQ++Hi2A2Mcwe03IyuIA5y1/CkXWdMgz+xBa6RulKRtnGOKCXSAwCkiwwGEpxQ6fMcRpTh6KxYSx1xukRfiNFbNTeXrBkh5q3dfQBjDm2BHl8Y79ZwHKjaEx2/vh+e5BgN8WMBuSFDkSN2Xu538bosi3t7QmK9mGIA5my8E6GOv6mIuJd6nElchh4VCy2oKOsldr+Pu3Bf8YUC0rXaBwROcm0eNvOD3I3SnggU=
-    - secure: HdrQhOHOYaqv/cABe3SImUQPA7i8x2zA/goYShtXc11VCFeWfuiwN3QnAT6jLbvXfZgWCTDSsD0IwDw3+w1gpjzjWqijKyHZjhSWYLiPtcL5neo1GR91863unJ11gzimc7P5ZJ+xZf24lR9sOb5JPfQKSC9zHz1NM/a5F7+2HpkS2GBWnLnX32QSfUiVCiJZkUF+C4S/0kgLxFmZTdi9ASJsgkNLg2/d5vtRnbZDHPhQwmk86hPyvR4yx7l+LmPzJ9ZUEKbJohwZWLVmGL+ueUVsFx9OSfS7h7OTx9TU9Gw2/GatRhF4BYVj/ADLwo/ETAb2kWmz6BetdlN2aLkvX8fU072H5KJyoklDKNk/8sZdM1wWFT55m0nUyNYwQLdMa2NKOt4HgXEeUCe7s+kdIV9A/lkvYwrzRtkOalApCE9bAXYEkE+hXxrHTWMiyGJCUGMuDMRydSYD3L8laA7SNTKj4hY9oo/p5vlsIWd5bxnubkbmFqzmiGhc4LcZz/3DbtEhBgJIlvBUIrYB17Y6HWZqrcKb2/O9+PdMagu8pSQEG6PF7b8PFcPOmS8d0Z+C0Rg6sR1TOUMiVQ9i9kHwqSF5ur/XzBFBFMNcjpVoVyLyG6KP1I/NIb9wIfhNKl746POq/9r6LTaBj1MOpGYoRnMIJyZpPbnYyjm9GdWDTOs=
+    - secure: Heqx5LaxSC7NijXBfSFzG2c2ucMEgbuaBFsEUf4xE+9ldVti1IUOx54HToP70E0K+nLMPyLiILVFTz3bB7LEG+tKoSWq4M1smOQiYO8DQSB/BTCxgkjyl9J6UAFSBxDmbXedv7Iliz4arRTe77Jd5sOdyzF5UtR8+YSVamvisSoblGHg1+OIgtEbVQNvF8N1shyzaSi/OJD3w2ncziplfB9FC66dmLy2Ml7mCiqwzHKq5dNLGMB2PZDDKBXFeWmgrN6sGBvWkQGEn2KDq+m3kJxiAg5bglmjLjD41X/8AOH6002mwV/SsMErrdXl+4f54ByWkBFWE6eUdVF5tEh8hiz266nNBfskRQvNFF0Tm7u7hVozfFi8Xl6PrshjONg5j6jaSMoCrBDB6v5VtE3vdSwXLJ+UgjAr83z1oSqremXIpDsYAUWT4z453Z48OoequqmmyV8ig8elkFirb8hp3qjjVW2tbTsq/n1sL7iY4HXfRV2i+nBvXOBO4t1Ikmo4chDWv8I9mEaGt9gT3t1eHW95S7eG26bc9QZKTaJke3tzOrILQu0G/va509HUPNb3h/F3bVMFF7/P7M6GPeUguKWPIxT4ga+i4t2coNy7mxFkrYZHhsrTmORMSn8gc/BGM+mLDGYnz5rM1LTUMW0dPdJGqrqBR7XsvObs7fjo41g=
+    - secure: FkhYYf5zbQnP1PosBmNRQnS+VdULMdFrl1iIj++4PNuTQ0QQm0IaMUwEWZraC6CBYeWVsO3frUGxn9OtaEsm5hrHkE1NySI5FtbVzAjqbDOSovxOZEcV4QNE3lckbcdx5bstzuf1llvCFA3Io4d6stghb3pTe0ida3Yjve7lzeDFCARi6Ajy0B3se2lI0R5AklpnA3vYCicXnznFOfOJD7kMZ1sqz5TU4p2aqbJIRlkIy+pOLm5fjvtAqY88muyUDf8ohdY8OjFzKg6/Rq6rmAkc7iujvPCUKFRgLMYVN2RvNqFfY6IYe03gUGKonosty7mg0X9C6Tp6czAazywDT91ErR3c5+/BBolVk9A3pN+J6wOwYy5/u143+GSU8qYzkKU+2V2z5mhOR67VWQCP/5m94UT8w6otipqKBGZFP5GqOen2u0swZp3/KSMjMOG0plLbeMinvY3UKKpW33IRvsP9v8wsxUo8GaqZi4h0Sfnzz1oInSKI95V8Gfko5BGeJvv6PV5DFg78/zHW56zlXkvQy0DbBOh+2Y4D0am+M3KZWN7mvt0zW6iH5b5PBfs61N03lcxKRSv5iSmntp8C28Wsnc6elzRIGTh9qlZrY3SY/jbKIsmG33gMpBoX4RXyqHS+gkQDpJrRBqXsusqHVlOSGaxVsIfk2mdi1TSvVMI=
 
 before_install:
   - docker pull $DOCKER_IMAGE
@@ -31,9 +28,16 @@ stages:
 jobs:
   include:
     - name: deploy
+      before_script:
+        - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda3.sh -nv
+        - chmod +x miniconda3.sh
+        - ./miniconda3.sh -b
+        - export PATH=/home/travis/miniconda3/bin:$PATH
+        - conda config --set always_yes true
+        - conda update --all --quiet
+        - conda install twine
       script:
-        - rm -rf /tmp/*
-        - pip install twine
-        - mkdir -p dist/
-        - find wheelhouse/ -name "nlopt*-py3-*-manylinux*.whl" -exec cp {} /dist \;
-        - twine upload --verbose -u $env:PYPI_USERNAME -p $env:PYPI_PASSWORD tmp/*
+        # copy everything to dist folder then upload it
+        - rm -rf dist && mkdir -p dist
+        - find wheelhouse/ -name "nlopt*-py3-*-manylinux*.whl" -exec cp {} dist/ \;
+        - twine upload --verbose --skip-existing -u $PYPI_USERNAME -p $PYPI_PASSWORD dist/*
