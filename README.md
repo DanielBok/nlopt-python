@@ -2,7 +2,7 @@ NLOpt Python
 ============
 
 [![Build Status](https://travis-ci.com/DanielBok/nlopt-python.svg?branch=master)](https://travis-ci.com/DanielBok/nlopt-python) 
-[![Build status](https://ci.appveyor.com/api/projects/status/c6jnq61eo114ba7y/branch/master?svg=true)](https://ci.appveyor.com/project/DanielBok/nlopt-python/branch/master) [![PyPI version](https://badge.fury.io/py/nlopt.svg)](https://badge.fury.io/py/nlopt)
+[![PyPI version](https://badge.fury.io/py/nlopt.svg)](https://badge.fury.io/py/nlopt)
 
 This project setups a tool chain to build pypi wheels for the NLOpt library. NLOpt contains various routines for non-linear optimization.
 
@@ -22,3 +22,14 @@ pip install nlopt
 
 For more information on how to use NLOpt with python, refer to the [documentation](https://nlopt.readthedocs.io/en/latest/NLopt_Python_Reference/).
 
+## Quick Test
+
+After installation, to test that it works, run the following
+
+```python
+from nlopt.test import test_nlopt
+
+test_nlopt()
+```
+
+If everything runs fine, it'll print a statement saying that all is well.
