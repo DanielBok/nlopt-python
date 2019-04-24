@@ -3,6 +3,7 @@
 dist/
 build/
 
+wheelhouse/
 __pycache__/
 nlopt/nlopt.dll
 nlopt/_nlopt.pyd

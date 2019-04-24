@@ -1,6 +1,10 @@
 import platform
+import sys
 
 from setuptools import find_packages, setup
+
+if sys.version_info < (3, 6):
+    sys.exit(0)
 
 install_requires = [
     'numpy >=1.14'
@@ -24,7 +28,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     license="MIT",  # placeholder, refer to the LICENSE file for more details
-    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*',
+    python_requires='>=3.6',
     install_requires=install_requires,
     url='https://nlopt.readthedocs.io/en/latest/',
     long_description=long_description,
@@ -36,7 +40,7 @@ setup(
         'Intended Audience :: End Users/Desktop',
         'Operating System :: MacOS',
         'Operating System :: Microsoft :: Windows',
-        'Operating System :: Unix',
+        'Operating System :: Unix'
         'Programming Language :: C++',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',

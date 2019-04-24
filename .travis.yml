@@ -21,6 +21,7 @@ before_install:
   - docker pull $DOCKER_IMAGE
 
 install:
+  - sudo chmod +x ./build.sh
   - docker run --rm -e PLAT=$PLAT -v `pwd`:/app $DOCKER_IMAGE app/build.sh
 
 stages:
