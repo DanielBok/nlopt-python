@@ -1,6 +1,6 @@
 FROM quay.io/pypa/manylinux2010_x86_64
 
-RUN yum update -y &&  yum install pcre-devel cmake3 -y
+RUN yum update -y && yum install pcre-devel cmake3 gcc -y
 
 WORKDIR /tmp
 RUN curl -L https://sourceforge.net/projects/swig/files/swig/swig-3.0.12/swig-3.0.12.tar.gz/download --output swig.tar.gz
@@ -15,3 +15,4 @@ RUN rm -rf ./*
 ENV PATH="/usr/local/bin/swig:$PATH"
 
 WORKDIR /
+ENTRYPOINT ["bash"]
