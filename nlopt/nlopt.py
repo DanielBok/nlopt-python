@@ -11,8 +11,8 @@ constraints).  Complete documentation, including a Python tutorial,
 can be found at the NLopt web page: http://ab-initio.mit.edu/nlopt
 """
 
-
 from sys import version_info as _swig_python_version_info
+
 if _swig_python_version_info >= (2, 7, 0):
     def swig_import_helper():
         import importlib
@@ -22,6 +22,8 @@ if _swig_python_version_info >= (2, 7, 0):
             return importlib.import_module(mname)
         except ImportError:
             return importlib.import_module('_nlopt')
+
+
     _nlopt = swig_import_helper()
     del swig_import_helper
 elif _swig_python_version_info >= (2, 6, 0):
@@ -40,6 +42,8 @@ elif _swig_python_version_info >= (2, 6, 0):
             if fp is not None:
                 fp.close()
         return _mod
+
+
     _nlopt = swig_import_helper()
     del swig_import_helper
 else:
@@ -55,6 +59,7 @@ try:
     import builtins as __builtin__
 except ImportError:
     import __builtin__
+
 
 def _swig_setattr_nondynamic(self, class_type, name, value, static=1):
     if (name == "thisown"):
@@ -95,13 +100,17 @@ def _swig_repr(self):
         strthis = ""
     return "<%s.%s; %s >" % (self.__class__.__module__, self.__class__.__name__, strthis,)
 
+
 try:
     _object = object
     _newclass = 1
 except __builtin__.Exception:
     class _object:
         pass
+
+
     _newclass = 0
+
 
 class SwigPyIterator(_object):
     __swig_setmethods__ = {}
@@ -111,6 +120,7 @@ class SwigPyIterator(_object):
 
     def __init__(self, *args, **kwargs):
         raise AttributeError("No constructor defined - class is abstract")
+
     __repr__ = _swig_repr
     __swig_destroy__ = _nlopt.delete_SwigPyIterator
     __del__ = lambda self: None
@@ -162,10 +172,14 @@ class SwigPyIterator(_object):
 
     def __sub__(self, *args):
         return _nlopt.SwigPyIterator___sub__(self, *args)
+
     def __iter__(self):
         return self
+
+
 SwigPyIterator_swigregister = _nlopt.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
+
 
 class nlopt_doublevector(_object):
     __swig_setmethods__ = {}
@@ -176,6 +190,7 @@ class nlopt_doublevector(_object):
 
     def iterator(self):
         return _nlopt.nlopt_doublevector_iterator(self)
+
     def __iter__(self):
         return self.iterator()
 
@@ -275,19 +290,23 @@ class nlopt_doublevector(_object):
 
     def capacity(self):
         return _nlopt.nlopt_doublevector_capacity(self)
+
     __swig_destroy__ = _nlopt.delete_nlopt_doublevector
     __del__ = lambda self: None
+
+
 nlopt_doublevector_swigregister = _nlopt.nlopt_doublevector_swigregister
 nlopt_doublevector_swigregister(nlopt_doublevector)
 
-
 ForcedStop = _nlopt.ForcedStop
 RoundoffLimited = _nlopt.RoundoffLimited
-__version__ = str(_nlopt.version_major())+'.'+str(_nlopt.version_minor())+'.'+str(_nlopt.version_bugfix())
+__version__ = str(_nlopt.version_major()) + '.' + str(_nlopt.version_minor()) + '.' + str(_nlopt.version_bugfix())
 
 
 def nlopt_get_initial_step(opt, dx):
     return _nlopt.nlopt_get_initial_step(opt, dx)
+
+
 nlopt_get_initial_step = _nlopt.nlopt_get_initial_step
 GN_DIRECT = _nlopt.GN_DIRECT
 GN_DIRECT_L = _nlopt.GN_DIRECT_L
@@ -346,6 +365,8 @@ XTOL_REACHED = _nlopt.XTOL_REACHED
 MAXEVAL_REACHED = _nlopt.MAXEVAL_REACHED
 MAXTIME_REACHED = _nlopt.MAXTIME_REACHED
 NUM_RESULTS = _nlopt.NUM_RESULTS
+
+
 class roundoff_limited(Exception):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, roundoff_limited, name, value)
@@ -359,10 +380,14 @@ class roundoff_limited(Exception):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
     __swig_destroy__ = _nlopt.delete_roundoff_limited
     __del__ = lambda self: None
+
+
 roundoff_limited_swigregister = _nlopt.roundoff_limited_swigregister
 roundoff_limited_swigregister(roundoff_limited)
+
 
 class forced_stop(Exception):
     __swig_setmethods__ = {}
@@ -377,10 +402,14 @@ class forced_stop(Exception):
             self.this.append(this)
         except __builtin__.Exception:
             self.this = this
+
     __swig_destroy__ = _nlopt.delete_forced_stop
     __del__ = lambda self: None
+
+
 forced_stop_swigregister = _nlopt.forced_stop_swigregister
 forced_stop_swigregister(forced_stop)
+
 
 class opt(_object):
     __swig_setmethods__ = {}
@@ -535,37 +564,57 @@ class opt(_object):
 
     def get_initial_step_(self, x):
         return _nlopt.opt_get_initial_step_(self, x)
+
+
 opt_swigregister = _nlopt.opt_swigregister
 opt_swigregister(opt)
 
 
 def srand(seed):
     return _nlopt.srand(seed)
+
+
 srand = _nlopt.srand
+
 
 def srand_time():
     return _nlopt.srand_time()
+
+
 srand_time = _nlopt.srand_time
+
 
 def version(major, minor, bugfix):
     return _nlopt.version(major, minor, bugfix)
+
+
 version = _nlopt.version
+
 
 def version_major():
     return _nlopt.version_major()
+
+
 version_major = _nlopt.version_major
+
 
 def version_minor():
     return _nlopt.version_minor()
+
+
 version_minor = _nlopt.version_minor
+
 
 def version_bugfix():
     return _nlopt.version_bugfix()
+
+
 version_bugfix = _nlopt.version_bugfix
+
 
 def algorithm_name(a):
     return _nlopt.algorithm_name(a)
+
+
 algorithm_name = _nlopt.algorithm_name
 # This file is compatible with both classic and new-style classes.
-
-
