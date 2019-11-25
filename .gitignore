@@ -8,3 +8,4 @@ __pycache__/
 nlopt/*.dll
 nlopt/*.pyd
 nlopt/*.so
+nlopt_src/

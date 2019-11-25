@@ -1,13 +1,12 @@
 .PHONY: all clean build repub
-
+CWD := $(CURDIR)
 VERSION := 2.6.1
 
 all: clean build
 	@echo Done!
 
-build:
-	# for testing purposes
-	python setup.py bdist_wheel -p win_amd64 --python-tag py37
+build: build-windows build-linux
+	@echo Done
 
 clean:
 	rm -rf build dist *.egg-info
@@ -20,3 +19,10 @@ repub:
 	git tag -a $(VERSION) -m "NLOpt $(VERSION)"
 	git push -f
 	git push -f --tags
+
+
+build-windows:
+	build.bat
+
+build-linux:
+	docker container run -v $(CURDIR):/app -v wheelhouse:/wheelhouse --rm danielbok/manylinux1_x86_64 /app/build.sh
