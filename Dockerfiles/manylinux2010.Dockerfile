@@ -1,4 +1,4 @@
-FROM quay.io/pypa/manylinux1_x86_64
+FROM quay.io/pypa/manylinux2010_x86_64
 
 ARG CMAKE_VERSION=2.8.12.2
 
@@ -26,5 +26,9 @@ RUN curl -L https://sourceforge.net/projects/swig/files/swig/swig-3.0.12/swig-3.
 
 WORKDIR /
 RUN rm -rf cmake-${CMAKE_VERSION} swig
+
+RUN /opt/python/cp36-cp36m/bin/pip install -U pip numpy cython scipy
+RUN /opt/python/cp37-cp37m/bin/pip install -U pip numpy cython scipy
+RUN /opt/python/cp38-cp38/bin/pip install -U pip numpy cython scipy
 
 ENTRYPOINT ["bash"]
