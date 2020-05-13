@@ -8,3 +8,5 @@ build:
 push:
 	bash cmd.sh push
 
+ubuntu:
+	bash ubuntu.sh
