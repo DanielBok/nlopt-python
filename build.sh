@@ -6,8 +6,15 @@
 
 PY_VER="${PY_VER:-37}"
 PLAT="${PLAT:-manylinux1_x86_64}"
-PATH=/opt/python/cp${PY_VER}-cp${PY_VER}m/bin:$PATH
-NLOPT_TAG=v2.6.1
+
+if [ $PY_VER = "37" ]; then
+  PATH=/opt/python/cp${PY_VER}-cp${PY_VER}m/bin:$PATH
+elif [ $PY_VER = "38" ]; then
+  PATH=/opt/python/cp${PY_VER}-cp${PY_VER}/bin:$PATH
+else
+  echo "Unsupported python version: ${PY_VER}"
+  exit 1
+fi
 
 NL_SRC=/stevengj/nlopt
 PREFIX=${NL_SRC}/install
@@ -15,7 +22,6 @@ PREFIX=${NL_SRC}/install
 echo "
 Python Version = ${PY_VER}
 Platform       = ${PLAT}
-NLOPT_VERSION  = ${NLOPT_TAG}
 "
 
 # Go to root and setup nlopt
@@ -23,7 +29,6 @@ cd /
 
 git clone https://github.com/stevengj/nlopt ${NL_SRC}
 cd ${NL_SRC}
-git checkout ${NLOPT_TAG}
 mkdir build && cd build
 pip install numpy # numpy is needed to generate python code
 
@@ -46,9 +51,10 @@ make && make install
 \cp -f ${PREFIX}/lib/python${PY_VER:0:1}.${PY_VER:1:2}/site-packages/* /app/nlopt/
 
 # Compile wheels
-"/opt/python/cp${PY_VER}-cp${PY_VER}m/bin/pip" wheel /app -w /wheelhouse/
+cd /app
+python setup.py bdist_wheel --python-tag cp${PY_VER} --plat-name linux_x86_64 --dist-dir /wheelhouse
 
 # Bundle external shared libraries into the wheels
 for whl in /wheelhouse/nlopt-*.whl; do
-  auditwheel repair "$whl" --plat ${PLAT} -w /app/wheelhouse/
+  auditwheel repair "$whl" --plat ${PLAT} -w /app/dist/
 done

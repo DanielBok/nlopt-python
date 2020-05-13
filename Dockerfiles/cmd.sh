@@ -6,14 +6,14 @@ user=danielbok
 while [[ $# -gt 0 ]]; do
 	case $1 in
 		build)
-			for IMG in ${images[@]}; do
+			for IMG in "${images[@]}"; do
 				docker image build -t ${user}/${IMG}:latest -f ${IMG}.Dockerfile .
 			done
 			docker image prune -f
 			;;
 
 		push)
-			for IMG in ${images[@]}; do
+			for IMG in "${images[@]}"; do
 				docker image push ${user}/${IMG}:latest
 			done
 			;;
@@ -23,4 +23,3 @@ while [[ $# -gt 0 ]]; do
 	esac
 	shift
 done
-

@@ -536,11 +536,8 @@ class opt(_object):
     def set_default_initial_step(self, x):
         return _nlopt.opt_set_default_initial_step(self, x)
 
-    def get_initial_step(self, *args):
-        return _nlopt.opt_get_initial_step(self, *args)
-
-    def get_initial_step_(self, x):
-        return _nlopt.opt_get_initial_step_(self, x)
+    def get_initial_step(self, x):
+        return _nlopt.opt_get_initial_step(self, x)
 opt_swigregister = _nlopt.opt_swigregister
 opt_swigregister(opt)
 

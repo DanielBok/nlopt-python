@@ -1,6 +1,6 @@
 .PHONY: all clean build repub
 CWD := $(CURDIR)
-VERSION := 2.6.1
+VERSION := 2.6.2
 
 all: clean build
 	@echo Done!
@@ -25,4 +25,7 @@ build-windows:
 	build.bat
 
 build-linux:
-	docker container run -v $(CURDIR):/app -v wheelhouse:/wheelhouse --rm danielbok/manylinux1_x86_64 /app/build.sh
+	docker container run -v $(CURDIR):/app -v wheelhouse:/wheelhouse --rm danielbok/manylinux1 /app/build.sh
+
+build-linux-ex:
+	docker container run -it -v $(CURDIR):/app --rm --entrypoint bash danielbok/manylinux1
