@@ -51,5 +51,9 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Topic :: Scientific/Engineering',
-    ]
+    ],
+    project_urls={
+        'Documentation': 'https://nlopt.readthedocs.io/en/latest/',
+        'Tracker': 'https://github.com/DanielBok/nlopt-python',
+    },
 )
