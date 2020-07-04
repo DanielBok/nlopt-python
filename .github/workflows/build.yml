@@ -3,8 +3,9 @@ name: Build
 on: [push, pull_request]
 
 env:
-  # only build CPython-3.x
+  # only build CPython-3.6+
   CIBW_BUILD: cp3?-*
+  CIBW_SKIP: cp35-*
 
 jobs:
   build_wheels:
