@@ -9,5 +9,3 @@ set (INSTALL_PYTHON_DIR ${CMAKE_INSTALL_PREFIX})
 option (BUILD_SHARED_LIBS OFF)
 
 add_subdirectory(extern/nlopt)
-
-set (NLOPT_PYTHON ON)
