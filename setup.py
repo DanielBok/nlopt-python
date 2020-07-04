@@ -64,7 +64,19 @@ class CMakeBuild(build_ext):
         build_temp = Path(self.build_temp)
         build_temp.mkdir(parents=True, exist_ok=True)
         cmd(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
-        cmd(["cmake", "--build", "."] + build_args, cwd=self.build_temp)
+        cmd(
+            ["cmake", "--build", "."] + build_args, cwd=self.build_temp,
+        )
+
+        # # turn output into a package
+        # nlopt = Path(self.build_temp) / "nlopt"
+        # nlopt.mkdir()
+        # (Path(self.build_temp) / "nlopt.py").rename(nlopt / "__init__.py")
+
+    def get_outputs(self):
+        r = build_ext.get_outputs(self)
+        print("outputs", r)
+        return r
 
 
 with open("README.md") as f:
@@ -107,7 +119,8 @@ setup(
         "Documentation": "https://nlopt.readthedocs.io/en/latest/",
         "Tracker": "https://github.com/DanielBok/nlopt-python",
     },
-    ext_modules=[CMakeExtension("nlopt")],
-    cmdclass=dict(build_ext=CMakeBuild),
+    packages=["nlopt"],
+    ext_modules=[CMakeExtension("nlopt._nlopt")],
+    cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
 )
