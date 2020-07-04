@@ -71,9 +71,6 @@ with open("README.md") as f:
     long_description = f.read()
 
 with open(Path(__file__).parent / "extern" / "nlopt" / "CMakeLists.txt") as f:
-    # set (NLOPT_MAJOR_VERSION "2")
-    # set (NLOPT_MINOR_VERSION "6")
-    # set (NLOPT_BUGFIX_VERSION "2")
     content = f.read()
     version = []
     for s in ("MAJOR", "MINOR", "BUGFIX"):
