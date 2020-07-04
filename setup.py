@@ -29,7 +29,7 @@ class CMakeBuild(build_ext):
 
     def build_extension(self, ext):
         def cmd(args, **kwds):
-            print(" ".join(args))
+            print(" ".join([str(x) for x in args]))
             subp.check_call(args, **kwds)
 
         # - make sure path ends with delimiter
