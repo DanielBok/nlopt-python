@@ -28,9 +28,15 @@ class CMakeBuild(build_ext):
             self.build_extension(ext)
 
     def build_extension(self, ext):
+        def cmd(args, **kwds):
+            print(" ".join(args))
+            subp.check_call(args, **kwds)
+
         # - make sure path ends with delimiter
         # - required for auto-detection of auxiliary "native" libs
-        extdir = str(Path(self.get_ext_fullpath(ext.name)).parent.absolute() / ".")[:-1]
+        extdir = str(Path(self.get_ext_fullpath(ext.name)).parent.absolute())
+        if not extdir[-1] == os.path.sep:
+            extdir += os.path.sep
 
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + extdir,
@@ -57,10 +63,8 @@ class CMakeBuild(build_ext):
         )
         build_temp = Path(self.build_temp)
         build_temp.mkdir(parents=True, exist_ok=True)
-        subp.check_call(
-            ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env
-        )
-        subp.check_call(["cmake", "--build", "."] + build_args, cwd=self.build_temp)
+        cmd(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
+        cmd(["cmake", "--build", "."] + build_args, cwd=self.build_temp)
 
 
 with open("README.md") as f:
@@ -106,7 +110,7 @@ setup(
         "Documentation": "https://nlopt.readthedocs.io/en/latest/",
         "Tracker": "https://github.com/DanielBok/nlopt-python",
     },
-    ext_modules=[CMakeExtension("nlopt-python")],
+    ext_modules=[CMakeExtension("nlopt")],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )
