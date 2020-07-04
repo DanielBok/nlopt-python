@@ -6,7 +6,7 @@ env:
   # only build CPython-3.6+
   CIBW_BUILD: cp3?-*
   CIBW_SKIP: cp35-*
-  CIBW_BEFORE_BUILD_LINUX: scripts/prepare_for_build.sh
+  CIBW_BEFORE_BUILD_LINUX: python -m pip install cmake
 
 jobs:
   build_wheels:
