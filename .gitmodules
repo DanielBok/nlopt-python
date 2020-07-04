@@ -1,0 +1,3 @@
+[submodule "extern/nlopt"]
+	path = extern/nlopt
+	url = https://github.com/HDembinski/nlopt.git

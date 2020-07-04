@@ -2,10 +2,10 @@
 *.egg-info/
 dist/
 build/
-
 wheelhouse/
 __pycache__/
-nlopt/*.dll
-nlopt/*.pyd
-nlopt/*.so
-nlopt_src/
+
+CMakeFiles
+
+py?
+py??
