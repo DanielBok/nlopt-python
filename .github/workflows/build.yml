@@ -27,7 +27,8 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        # os: [ubuntu-18.04, windows-latest, macos-latest]
+        # - windows wheels are build on appveyor
+        # - compilation fails with linker errors in windows-latest 
         os: [ubuntu-18.04, macos-latest]
     steps:
       - uses: actions/checkout@v2
