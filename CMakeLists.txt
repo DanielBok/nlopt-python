@@ -14,15 +14,21 @@ execute_process(
   COMMAND
     ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
   OUTPUT_VARIABLE
-    PYTHON_INCLUDE_DIRS
+    PYTHON_INCLUDE_DIR
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 execute_process(
   COMMAND
     ${PYTHON_EXECUTABLE} -c "import distutils.sysconfig as sysconfig; print(sysconfig.get_config_var('LIBDIR'))"
   OUTPUT_VARIABLE
-    PYTHON_LIBRARIES
+    PYTHON_LIBRARY
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
+set (PYTHON_INCLUDE_DIR ${PYTHON_INCLUDE_DIR} CACHE STRING "" FORCE)
+set (PYTHON_LIBRARY ${PYTHON_LIBRARY} CACHE STRING "" FORCE)
+
+message(STATUS "Found Python includes: ${PYTHON_INCLUDE_DIR}")
+message(STATUS "Found Python libs: ${PYTHON_LIBRARY}")
 
 add_subdirectory(extern/nlopt)
