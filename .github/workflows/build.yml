@@ -6,21 +6,23 @@ env:
   # only build CPython-3.6 and later
   CIBW_BUILD: cp3?-*
   CIBW_SKIP: cp35-*
-  CIBW_BEFORE_BUILD_LINUX: |
+  CIBW_BEFORE_ALL_LINUX: |
     {project}/scripts/prepare_linux.sh
-  CIBW_BEFORE_BUILD_MACOS: |
+  CIBW_BEFORE_ALL_MACOS: |
     {project}/scripts/prepare_macos.sh
+  CIBW_BEFORE_BUILD: |
+    python -m pip install numpy
   CIBW_TEST_COMMAND: |
     python {project}/extern/nlopt/test/t_python.py
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
-    runs-on: macos-latest
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-      # matrix:
-        # os: [ubuntu-18.04, windows-latest, macos-latest]
+    # runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, windows-latest, macos-latest]
 
     steps:
       - uses: actions/checkout@v2
