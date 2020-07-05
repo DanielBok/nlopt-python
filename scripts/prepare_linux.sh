@@ -1,4 +1,6 @@
 #!/bin/sh
+python -m pip install cmake numpy
+
 if [ ! -e /tmp/swig.tar.gz ]; then
   # only do this once
 
