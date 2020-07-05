@@ -21,12 +21,11 @@ env:
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
-    runs-on: windows-latest
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-    #   fail-fast: False
-    #   matrix:
-    #     os: [ubuntu-18.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: False
+      matrix:
+        os: [ubuntu-18.04, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v2
         with:
