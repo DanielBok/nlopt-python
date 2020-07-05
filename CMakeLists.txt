@@ -13,13 +13,13 @@ find_package (PythonInterp)
 execute_process(
   COMMAND
     ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
-  RESULT_VARIABLE
+  OUTPUT_VARIABLE
     PYTHON_INCLUDE_DIRS
 )
 execute_process(
   COMMAND
     ${PYTHON_EXECUTABLE} -c "import distutils.sysconfig as sysconfig; print(sysconfig.get_config_var('LIBDIR'))"
-  RESULT_VARIABLE
+  OUTPUT_VARIABLE
     PYTHON_LIBRARIES
 )
 
