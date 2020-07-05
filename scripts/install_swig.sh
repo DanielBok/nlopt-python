@@ -9,6 +9,6 @@ fi
 rm -rf /tmp/swig
 mkdir swig
 
-tar -xvzf /tmp/swig.tar.gz -C swig --strip-components 1
+tar -xvzf /tmp/swig.tar.gz -C swig --strip-components 1 &> /dev/null
 cd swig
 ./configure --without-alllang --with-python3 && make -j2 && make install

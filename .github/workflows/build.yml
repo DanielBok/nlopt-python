@@ -9,7 +9,7 @@ env:
   CIBW_BEFORE_BUILD_LINUX: |
     python -m pip install cmake numpy && {project}/scripts/install_swig.sh
   CIBW_TEST_COMMAND: |
-    {project}/extern/nlopt/test/t_python.py
+    python {project}/extern/nlopt/test/t_python.py
 
 jobs:
   build_wheels:
