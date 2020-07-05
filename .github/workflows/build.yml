@@ -6,6 +6,8 @@ env:
   # only build CPython-3.6 and later
   CIBW_BUILD: cp3?-*
   CIBW_SKIP: cp35-*
+  CIBW_BEFORE_ALL_LINUX: |
+    yum update -y && yum install pcre-devel -y
   CIBW_BEFORE_ALL_WINDOWS: |
     choco install swig -y
   CIBW_BEFORE_ALL_MACOS: |
@@ -13,7 +15,7 @@ env:
   CIBW_BEFORE_BUILD: |
     python -m pip install numpy
   CIBW_BEFORE_BUILD_LINUX: |
-    scripts/prepare_linux.sh
+    scripts/install_swig.sh
     python -m pip install numpy cmake
   CIBW_TEST_COMMAND: |
     python {project}/extern/nlopt/test/t_python.py
@@ -25,7 +27,9 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        os: [ubuntu-18.04, windows-latest, macos-latest]
+        # windows wheels are build on appveyor, because
+        # compilation fails with linker errors in windows-latest 
+        os: [ubuntu-18.04, macos-latest]
     steps:
       - uses: actions/checkout@v2
         with:

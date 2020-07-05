@@ -8,8 +8,6 @@ fi
 if [ ! -e /tmp/swig ]; then
   # only do this once
 
-  yum update -y && yum install pcre-devel -y
-
   mkdir /tmp/swig
   tar -xvzf /tmp/swig.tar.gz -C /tmp/swig --strip-components 1 &> /dev/null
 
