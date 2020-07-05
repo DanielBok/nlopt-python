@@ -16,7 +16,7 @@ env:
     scripts/prepare_linux.sh
     python -m pip install numpy cmake
   CIBW_TEST_COMMAND: |
-    python extern/nlopt/test/t_python.py
+    python {project}/extern/nlopt/test/t_python.py
 
 jobs:
   build_wheels:
