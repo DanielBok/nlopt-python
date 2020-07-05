@@ -10,8 +10,6 @@ env:
     {project}/scripts/prepare_linux.sh
   CIBW_BEFORE_ALL_MACOS: |
     {project}/scripts/prepare_macos.sh
-  CIBW_BEFORE_ALL_WINDOWS: |
-    {project}/scripts/prepare_windows.sh
   CIBW_BEFORE_BUILD: |
     python -m pip install numpy
   CIBW_TEST_COMMAND: |
