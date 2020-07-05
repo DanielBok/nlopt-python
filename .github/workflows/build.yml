@@ -3,18 +3,20 @@ name: Build
 on: [push, pull_request]
 
 env:
-  # only build CPython-3.6+
+  # only build CPython-3.6 and later
   CIBW_BUILD: cp3?-*
   CIBW_SKIP: cp35-*
   CIBW_BEFORE_BUILD_LINUX: |
-    python -m pip install cmake numpy && {project}/scripts/install_swig.sh
+    python -m pip install cmake numpy && {project}/scripts/install_swig_linux.sh
+  CIBW_BEFORE_BUILD_MACOS: |
+    python -m pip install cmake numpy && {project}/scripts/install_swig_macos.sh
   CIBW_TEST_COMMAND: |
     python {project}/extern/nlopt/test/t_python.py
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
-    runs-on: ubuntu-18.04
+    runs-on: macos-latest
     # runs-on: ${{ matrix.os }}
     # strategy:
       # matrix:
