@@ -7,9 +7,9 @@ env:
   CIBW_BUILD: cp3?-*
   CIBW_SKIP: cp35-*
   CIBW_BEFORE_BUILD_LINUX: |
-    python -m pip install cmake numpy && {project}/scripts/install_swig_linux.sh
+    {project}/scripts/prepare_linux.sh
   CIBW_BEFORE_BUILD_MACOS: |
-    python -m pip install cmake numpy && {project}/scripts/install_swig_macos.sh
+    {project}/scripts/prepare_macos.sh
   CIBW_TEST_COMMAND: |
     python {project}/extern/nlopt/test/t_python.py
 
