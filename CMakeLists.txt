@@ -15,12 +15,14 @@ execute_process(
     ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
   OUTPUT_VARIABLE
     PYTHON_INCLUDE_DIRS
+  OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 execute_process(
   COMMAND
     ${PYTHON_EXECUTABLE} -c "import distutils.sysconfig as sysconfig; print(sysconfig.get_config_var('LIBDIR'))"
   OUTPUT_VARIABLE
     PYTHON_LIBRARIES
+  OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 add_subdirectory(extern/nlopt)
