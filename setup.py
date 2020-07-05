@@ -111,7 +111,6 @@ setup(
         "Documentation": "https://nlopt.readthedocs.io/en/latest/",
         "Tracker": "https://github.com/DanielBok/nlopt-python",
     },
-    # packages=["nlopt"],
     ext_modules=[CMakeExtension("nlopt._nlopt")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
