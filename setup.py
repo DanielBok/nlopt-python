@@ -92,8 +92,10 @@ setup(
     install_requires=["numpy >=1.14"],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    maintainer="Daniel Bok",
-    maintainer_email="daniel.bok@outlook.com",
+    author="Daniel Bok",
+    author_email="daniel.bok@outlook.com",
+    maintainer="Hans Dembinski",
+    maintainer_email="hans.dembinski@gmail.com",
     classifiers=[
         "Development Status :: 5 - Production",
         "Intended Audience :: Education",
@@ -109,7 +111,7 @@ setup(
     ],
     project_urls={
         "Documentation": "https://nlopt.readthedocs.io/en/latest/",
-        "Tracker": "https://github.com/DanielBok/nlopt-python",
+        "Tracker": "https://github.com/HDembinski/nlopt-python",
     },
     ext_modules=[CMakeExtension("nlopt._nlopt")],
     cmdclass={"build_ext": CMakeBuild},
