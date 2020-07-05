@@ -61,7 +61,8 @@ class CMakeBuild(build_ext):
         build_temp.mkdir(parents=True, exist_ok=True)
 
         def cmd(*args, **kwds):
-            subp.check_call(args, **kwds)
+            # Path objects not accepted on Windows
+            subp.check_call([str(x) for x in args], **kwds)
 
         cmd("cmake", ext.sourcedir, *cmake_args, cwd=self.build_temp, env=env)
         cmd("cmake", "--build", ".", *build_args, cwd=self.build_temp)
