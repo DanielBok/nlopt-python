@@ -6,9 +6,10 @@ env:
   # only build CPython-3.6+
   CIBW_BUILD: cp3?-*
   CIBW_SKIP: cp35-*
-  CIBW_BEFORE_BUILD: python -m pip install cmake numpy
-  CIBW_BEFORE_BUILD_LINUX: "{project}/scripts/install_swig.sh"
-  CIBW_TEST_COMMAND: "{project}/extern/nlopt/test/t_python.py"
+  CIBW_BEFORE_BUILD_LINUX: |
+    python -m pip install cmake numpy && {project}/scripts/install_swig.sh
+  CIBW_TEST_COMMAND: |
+    {project}/extern/nlopt/test/t_python.py
 
 jobs:
   build_wheels:
