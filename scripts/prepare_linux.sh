@@ -1,6 +1,4 @@
 #!/bin/sh
-python -m pip install cmake
-
 if [ ! -e /tmp/swig.tar.gz ]; then
   # only do this once
 
