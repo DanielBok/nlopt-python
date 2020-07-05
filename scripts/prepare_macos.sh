@@ -1,2 +1,2 @@
 #!/bin/sh
-brew install swig cmake
+brew install swig
