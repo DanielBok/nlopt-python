@@ -24,6 +24,14 @@ class CMakeBuild(build_ext):
                 + ", ".join(e.name for e in self.extensions)
             )
 
+        try:
+            subp.check_call(["swig", "--help"])
+        except OSError:
+            raise RuntimeError(
+                "SWIG must be installed to build the following extensions: "
+                + ", ".join(e.name for e in self.extensions)
+            )
+
         for ext in self.extensions:
             self.build_extension(ext)
 
