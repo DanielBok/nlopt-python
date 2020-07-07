@@ -110,8 +110,8 @@ setup(
         "Topic :: Scientific/Engineering",
     ],
     project_urls={
-        "Documentation": "https://nlopt.readthedocs.io/en/latest/",
-        "Tracker": "https://github.com/HDembinski/nlopt-python",
+        "Documentation": "https://nlopt.readthedocs.io/en/latest",
+        "Tracker": "https://github.com/DanielBok/nlopt-python",
     },
     ext_modules=[CMakeExtension("nlopt._nlopt")],
     cmdclass={"build_ext": CMakeBuild},
