@@ -25,7 +25,7 @@ class CMakeBuild(build_ext):
             )
 
         try:
-            subp.check_call(["swig", "--help"])
+            subp.check_call(["swig", "-version"])
         except OSError:
             raise RuntimeError(
                 "SWIG must be installed to build the following extensions: "
