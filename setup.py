@@ -97,7 +97,7 @@ setup(
     maintainer="Hans Dembinski",
     maintainer_email="hans.dembinski@gmail.com",
     classifiers=[
-        "Development Status :: 5 - Production",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Education",
         "Intended Audience :: End Users/Desktop",
         "Operating System :: MacOS",
