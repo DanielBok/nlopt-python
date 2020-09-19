@@ -1,11 +1,12 @@
-import re
 import os
+import platform
+import re
+import subprocess as subp
 import sys
 from pathlib import Path
-from setuptools import setup, Extension
+
+from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
-import platform
-import subprocess as subp
 
 
 class CMakeExtension(Extension):
@@ -30,7 +31,7 @@ class CMakeBuild(build_ext):
     def build_extension(self, ext):
         # - make sure path ends with delimiter
         # - required for auto-detection of auxiliary "native" libs
-        extdir = str(Path(self.get_ext_fullpath(ext.name)).parent.absolute())
+        extdir = Path(self.get_ext_fullpath(ext.name)).parent.absolute().as_posix()
         if not extdir[-1] == os.path.sep:
             extdir += os.path.sep
 
@@ -86,7 +87,7 @@ setup(
     name="nlopt",
     version=version,
     description="Library for nonlinear optimization, wrapping many algorithms for "
-    "global and local, constrained or unconstrained, optimization",
+                "global and local, constrained or unconstrained, optimization",
     license="MIT",  # placeholder, refer to the LICENSE file for more details
     python_requires=">=3.6",
     install_requires=["numpy >=1.14"],
