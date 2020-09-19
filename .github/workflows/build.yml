@@ -1,47 +1,86 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - develop/*
+  pull_request:
+    branches:
+      - master
+  release:
+    types: [ published ]
 
-env:
-  # only build CPython-3.6 and later
-  CIBW_BUILD: cp3?-*
-  CIBW_SKIP: cp35-*
-  CIBW_BEFORE_ALL_LINUX: |
-    yum update -y && yum install pcre-devel -y
-  CIBW_BEFORE_ALL_WINDOWS: |
-    choco install swig -y
-  CIBW_BEFORE_ALL_MACOS: |
-    brew install swig
-  CIBW_BEFORE_BUILD: |
-    python -m pip install numpy
-  CIBW_BEFORE_BUILD_LINUX: |
-    scripts/install_swig.sh
-    python -m pip install numpy cmake
-  CIBW_TEST_COMMAND: |
-    python {project}/extern/nlopt/test/t_python.py
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels on ${{ matrix.os }} - Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: False
       matrix:
-        # windows wheels are build on appveyor, because
-        # compilation fails with linker errors in windows-latest 
-        os: [ubuntu-18.04, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: [ 3.6, 3.7, 3.8 ]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           submodules: true
 
-      - uses: actions/setup-python@v2
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: 3.8
 
-      - run: python -m pip install cibuildwheel==1.5.1
-      - run: python -m cibuildwheel --output-dir wheelhouse
+      - name: Build wheels
+        env:
+          # only build CPython-3.6 and later and skip 32-bit builds
+          CIBW_BUILD: cp36-* cp37-* cp38-*
+          CIBW_BEFORE_ALL_LINUX: |
+            yum update -y && yum install pcre-devel -y
+          CIBW_BEFORE_ALL_WINDOWS: |
+            choco install swig -y
+          CIBW_BEFORE_ALL_MACOS: |
+            brew install swig
+          CIBW_BEFORE_BUILD: |
+            python -m pip install numpy
+          CIBW_BEFORE_BUILD_LINUX: |
+            scripts/install_swig.sh
+            python -m pip install cmake
+          CIBW_TEST_COMMAND: |
+            python {project}/extern/nlopt/test/t_python.py
+        run: |
+          python -m pip install cibuildwheel==1.5.1 numpy
+          python -m cibuildwheel --output-dir dist
 
-      - uses: actions/upload-artifact@v2
+      - name: Place wheels in artifacts folder
+        uses: actions/upload-artifact@v2
         with:
-          path: ./wheelhouse/*.whl
+          path: ./dist/*.whl
+
+  test-wheels:
+    name: Test package installation
+    needs: build_wheels
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python-version: [ 3.6, 3.7, 3.8 ]
+
+    steps:
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Retrieve packages
+        uses: actions/download-artifact@v2
+        with:
+          path: dist
+
+      - name: Test Package Installation
+        run: |
+          ls -alR dist
