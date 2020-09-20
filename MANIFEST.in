@@ -1,4 +1,3 @@
-include CMakeLists.txt
 include LICENSE
 include MANIFEST.in
 include README.md
