@@ -53,7 +53,8 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest ]
+    #        os: [ ubuntu-latest, macos-latest ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -65,26 +66,42 @@ jobs:
         with:
           python-version: 3.8
 
-  #      - name: Build wheels
-  #        env:
-  #          # only build CPython-3.6 and later and skip 32-bit builds
-  #          CIBW_BUILD: cp36-* cp37-* cp38-*
-  #          CIBW_BEFORE_ALL_LINUX: yum update -y && yum install pcre-devel -y
-  #          CIBW_BEFORE_ALL_MACOS: brew install swig
-  #          CIBW_BEFORE_BUILD: python -m pip install -u pip numpy cibuildwheel==1.5.1
-  #          CIBW_BEFORE_BUILD_LINUX: |
-  #            scripts/install_swig.sh
-  #            python -m pip install cmake
-  #          CIBW_TEST_COMMAND: python {project}/extern/nlopt/test/t_python.py
-  #        run: python -m cibuildwheel --output-dir dist
+      - name: Build wheels
+        env:
+          # only build CPython-3.6 and later and skip 32-bit builds and skip windows
+          CIBW_BUILD: cp36-* cp37-* cp38-*
+          CIBW_SKIP: "*-win* *-manylinux_i686"
+          CIBW_BEFORE_ALL_LINUX: |
+            yum update -y && yum install pcre-devel cmake3 -y
+            yum remove cmake -y
+            ln -s /usr/bin/cmake3 /usr/bin/cmake
+
+            if [[ ! -e $(command -v swig) ]]; then
+              curl -L https://sourceforge.net/projects/swig/files/swig/swig-4.0.2/swig-4.0.2.tar.gz/download --output /tmp/swig.tar.gz
+              mkdir /tmp/swig
+              tar -xvzf /tmp/swig.tar.gz -C /tmp/swig --strip-components 1 &> /dev/null
+              pushd /tmp/swig
+              ./configure --without-alllang --with-python3 && make -j2 && make install > /dev/null
+              popd
+            fi
+          CIBW_BEFORE_ALL_MACOS: brew install swig
+          CIBW_BEFORE_BUILD: pip install numpy
+        run: |
+          pip install -U pip cibuildwheel==1.5.1
+          python -m cibuildwheel --output-dir dist
+
+      - name: Place wheels in artifacts folder
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./dist/*.whl
 
   test-wheels:
     name: Test package installation
-    needs: [ build_wheels_windows ]
+    needs: [ build_wheels_windows, build_wheels_unix ]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest ]
+        os: [ windows-latest, ubuntu-latest ]
         python-version: [ 3.6, 3.7, 3.8 ]
 
     steps:
@@ -104,6 +121,7 @@ jobs:
 
       - name: Test Package Installation
         run: |
+          ls -alR dist
           python -m pip install --upgrade pip
 
           # finds path to the right wheel or source file to install later

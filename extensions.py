@@ -25,88 +25,20 @@ class NLOptBuild(build_ext):
         except OSError:
             raise RuntimeError("CMake must be installed")
 
+        if platform.system() not in ("Windows", "Linux", "Darwin"):
+            raise RuntimeError(f"Unsupported os: {platform.system()}")
+
         for ext in self.extensions:
             if isinstance(ext, NLOptBuildExtension):
                 self.build_extension(ext)
 
     @property
-    def nlopt_dir(self):
-        return Path(__file__).parent / "tern" / "nlopt"
-
-    @property
     def config(self):
         return "Debug" if self.debug else "Release"
-
-    def cmake_args(self, ext_dir: str):
-        prefix = "NLOPT_BUILD"
-
-        args = [
-            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={ext_dir}",
-            f"-DPYTHON_EXECUTABLE={sys.executable}",
-            # don't build for matlab and others
-            "-DNLOPT_GUILE=OFF",
-            "-DNLOPT_MATLAB=OFF",
-            "-DNLOPT_OCTAVE=OFF"]
-
-        if platform.system() == "Windows":
-            args += [
-                "-LAH",
-                f'-DCMAKE_PREFIX_PATH="{prefix}"',
-                f'-DCMAKE_INSTALL_PREFIX="{prefix}"'
-            ]
-        elif platform.system() in ("Linux", "Darwin"):
-            args += [
-                f"-DCMAKE_PREFIX_PATH={prefix}",
-                f"-DCMAKE_INSTALL_PREFIX={prefix}",
-                "-DCMAKE_INSTALL_LIBDIR=lib",
-            ]
-        else:
-            raise RuntimeError(f"Unsupported os: {platform.system()}")
-
-        return args
 
     def build_extension(self, ext: Extension):
         # - make sure path ends with delimiter
         # - required for auto-detection of auxiliary "native" libs
-        ext_dir = Path(self.get_ext_fullpath(ext.name)).parent.absolute().as_posix()
-        if not ext_dir.endswith(os.path.sep):
-            ext_dir += os.path.sep
-
-        if platform.system() == "Windows":
-            self._build_windows(ext)
-            return
-
-        exit(1)
-
-        cmake_args = [
-            "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + ext_dir,
-            "-DPYTHON_EXECUTABLE=" + sys.executable,
-        ]
-
-        cfg = "Debug" if self.debug else "Release"
-        build_args = ["--config", cfg]
-
-        if platform.system() == "Windows":
-            cmake_args += [f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{cfg.upper()}={ext_dir}"]
-            if sys.maxsize > 2 ** 32:
-                cmake_args += ["-A", "x64"]
-            build_args += (["--", "/m"])
-        else:
-            build_args += ["--", "-j2"]
-
-        env = os.environ.copy()
-        env["CXXFLAGS"] = f'{env.get("CXXFLAGS", "")} -DVERSION_INFO="{self.distribution.get_version()}"'
-
-        build_temp = Path(self.build_temp)
-        build_temp.mkdir(parents=True, exist_ok=True)
-
-        check_call(["cmake", ext.sourcedir, *cmake_args], cwd=self.build_temp, env=env)
-        check_call(["cmake", "--build", ".", *build_args], cwd=self.build_temp)
-
-        nlopt_py = next(Path(self.build_temp).rglob("nlopt.py"))
-        nlopt_py.rename(Path(ext_dir) / "__init__.py")
-
-    def _build_windows(self, ext: NLOptBuildExtension):
         ext_dir = Path(self.get_ext_fullpath(ext.name)).parent.absolute()
         _ed = ext_dir.as_posix()
         if not _ed.endswith(os.path.sep):
@@ -115,18 +47,22 @@ class NLOptBuild(build_ext):
         build_dir = create_directory(Path(self.build_temp))
 
         # package builds in 2 steps, first to compile the nlopt package and second to build the DLL
+        cmd = [
+            "cmake",
+            "-LAH",
+            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={_ed}",
+            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            "-DNLOPT_GUILE=OFF",
+            "-DNLOPT_MATLAB=OFF",
+            "-DNLOPT_OCTAVE=OFF",
+            ext.source_dir.as_posix()
+        ]
+
+        if platform.system() == "Windows":
+            cmd.insert(2, f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{self.config.upper()}={_ed}")
+
         execute_command(
-            cmd=[
-                "cmake",
-                "-LAH",
-                f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={_ed}",
-                f"-DPYTHON_EXECUTABLE={sys.executable}",
-                f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{self.config.upper()}={_ed}",
-                "-DNLOPT_GUILE=OFF",
-                "-DNLOPT_MATLAB=OFF",
-                "-DNLOPT_OCTAVE=OFF",
-                ext.source_dir.as_posix()
-            ],
+            cmd=cmd,
             cwd=build_dir,
             env={
                 **os.environ.copy(),
@@ -141,7 +77,7 @@ class NLOptBuild(build_ext):
             '--config',
             self.config,
             "--",
-            "-m"
+            "-m" if platform.system() == "Windows" else "-j2"
         ], cwd=build_dir)
 
         # Copy over the important bits
