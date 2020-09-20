@@ -88,6 +88,10 @@ jobs:
         python-version: [ 3.6, 3.7, 3.8 ]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -100,4 +104,18 @@ jobs:
 
       - name: Test Package Installation
         run: |
-          ls -alR dist
+          python -m pip install --upgrade pip
+
+          # finds path to the right wheel or source file to install later
+          os=$(echo ${{ runner.os }} | awk '{print tolower($0)}' | head -c3)
+
+          # version refers to the python version. So 3.8 -> 38
+          version=$(echo ${{ matrix.python-version }} | sed 's/\.//g')
+
+          # this finds files like
+          # nlopt-2.6.2-cp36-cp36m-win_amd64.whl
+          # nlopt-2.6.2-cp36-cp36m-manylinux10_amd64.whl
+          file=$(find dist -name "nlopt-*${version}*${os}*.whl" -type f);
+
+          pip install ${file}
+          python extern/nlopt/test/t_python.py
