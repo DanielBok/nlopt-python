@@ -2,8 +2,7 @@ NLOpt Python
 ============
 
 [![PyPI version](https://badge.fury.io/py/nlopt.svg)](https://badge.fury.io/py/nlopt)
-[![Windows](https://ci.appveyor.com/api/projects/status/ffpoxdg2p49sagc7?svg=true)](https://ci.appveyor.com/project/HDembinski/nlopt-python)
-![Linux and MacOS](https://github.com/HDembinski/nlopt-python/workflows/Build/badge.svg)
+![Build](https://github.com/DanielBok/nlopt-python/workflows/Build/badge.svg?branch=master)
 
 This project builds Python wheels for the NLOpt library. NLOpt contains various routines for non-linear optimization.
 
