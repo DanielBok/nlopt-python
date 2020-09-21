@@ -53,8 +53,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        os: [ ubuntu-latest ]
-    #        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -101,7 +100,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest ]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
         python-version: [ 3.6, 3.7, 3.8 ]
 
     steps:
@@ -121,7 +120,6 @@ jobs:
 
       - name: Test Package Installation
         run: |
-          ls -alR dist
           python -m pip install --upgrade pip
 
           # finds path to the right wheel or source file to install later
