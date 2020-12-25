@@ -37,7 +37,7 @@ jobs:
         with:
           context: ci
           file: ci/nlopt_manylinux2014_x86_64.Dockerfile
-          push: true
+          push: github.ref == 'refs/heads/master'
           tags: |
             danielbok/nlopt_manylinux2014_x86_64:latest
             danielbok/nlopt_manylinux2014_x86_64:${{ steps.current-time.outputs.formattedTime }}
