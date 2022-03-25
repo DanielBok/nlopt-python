@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ 3.6, 3.7, 3.8, 3.9 ]
+        python-version: [ 3.7, 3.8, 3.9, '3.10' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -68,15 +68,16 @@ jobs:
       - name: Build wheels
         env:
           # only build CPython-3.6 and later and skip 32-bit builds and skip windows
-          CIBW_BUILD: cp36-* cp37-* cp38-* cp39-*
+          CIBW_BUILD: cp37-* cp38-* cp39-* cp310-*
           CIBW_SKIP: "*-win* *-manylinux_i686"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: danielbok/nlopt_manylinux2014_x86_64:latest
           CIBW_BEFORE_ALL_MACOS: brew install swig
           CIBW_BEFORE_BUILD: pip install numpy
         run: |
-          pip install -U pip cibuildwheel==1.7.2
+          pip install -U pip cibuildwheel
           python -m cibuildwheel --output-dir dist
+          ls -R dist
 
       - name: Place wheels in artifacts folder
         uses: actions/upload-artifact@v2
@@ -90,7 +91,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
-        python-version: [ 3.6, 3.7, 3.8, 3.9 ]
+        python-version: [ 3.7, 3.8, 3.9, '3.10' ]
 
     steps:
       - name: Checkout repository
@@ -123,6 +124,7 @@ jobs:
           # this finds files like
           # nlopt-2.6.2-cp36-cp36m-win_amd64.whl
           # nlopt-2.6.2-cp36-cp36m-manylinux10_amd64.whl
+          # nlopt-2.7.1-cp310-cp310-win_amd64.whl
           file=$(find dist -name "nlopt-*${version}*${os}*.whl" -type f);
 
           echo "Installing file: ${file}"
