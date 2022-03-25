@@ -69,7 +69,7 @@ jobs:
         env:
           # only build CPython-3.6 and later and skip 32-bit builds and skip windows
           CIBW_BUILD: cp37-* cp38-* cp39-* cp310-*
-          CIBW_SKIP: "*-win* *-manylinux_i686"
+          CIBW_SKIP: "*-win* *-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: danielbok/nlopt_manylinux2014_x86_64:latest
           CIBW_BEFORE_ALL_MACOS: brew install swig
