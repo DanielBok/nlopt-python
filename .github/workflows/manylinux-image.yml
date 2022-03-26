@@ -1,6 +1,7 @@
 name: Build and push manylinux image
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
