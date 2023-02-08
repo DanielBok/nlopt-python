@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ 3.7, 3.8, 3.9, '3.10' ]
+        python-version: [ 3.8, 3.9, '3.10', '3.11' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -60,22 +60,22 @@ jobs:
         with:
           submodules: true
 
-      - name: Setup Python 3.9
+      - name: Setup Python 3.10
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: '3.10'
 
       - name: Build wheels
         env:
           # only build CPython-3.6 and later and skip 32-bit builds and skip windows
-          CIBW_BUILD: cp37-* cp38-* cp39-* cp310-*
+          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-*
           CIBW_SKIP: "*-win* *-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: danielbok/nlopt_manylinux2014_x86_64:latest
           CIBW_BEFORE_ALL_MACOS: brew install swig
           CIBW_BEFORE_BUILD: pip install numpy
         run: |
-          pip install -U pip cibuildwheel
+          python -m pip install -U pip cibuildwheel
           python -m cibuildwheel --output-dir dist
           ls -R dist
 
@@ -91,7 +91,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
-        python-version: [ 3.7, 3.8, 3.9, '3.10' ]
+        python-version: [ 3.8, 3.9, '3.10', '3.11' ]
 
     steps:
       - name: Checkout repository
