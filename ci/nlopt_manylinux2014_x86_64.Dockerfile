@@ -1,4 +1,4 @@
-FROM quay.io/pypa/manylinux2014_x86_64:2022-03-19-a819637
+FROM quay.io/pypa/manylinux2014_x86_64:2023-02-05-56647d4
 
 # cmake already version 3, thus no need to update cmake
 

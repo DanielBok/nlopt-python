@@ -12,7 +12,11 @@ How to Update
    the linux images
     * This should be done in `image/*` branch as the github action `manylinux-image.yml` will automatically update the
       image in dockerhub on push.
+    * Whenever there is a upgrade to Python's minor version, it is likely that the manylinux image will not have that
+      version. Go to https://quay.io/repository/pypa/manylinux2014_x86_64?tab=tags and change the image version 
+      accordingly.
 3. Update `.github/workflows/build.yaml` if necessary
+    * Search for lines: `python-version`, `CIBW_BUILD`
 4. There are already tests in the github workflows to test that `pip install nlopt` works. But none to test the module specifically
    1. Spin up a docker image and run the sample code
    2. ```shell
