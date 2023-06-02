@@ -51,7 +51,7 @@ class NLOptBuild(build_ext):
             "cmake",
             "-LAH",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={_ed}",
-            f"-DPYTHON_EXECUTABLE={sys.executable}",
+            f"-DPython_EXECUTABLE={sys.executable}",
             "-DNLOPT_GUILE=OFF",
             "-DNLOPT_MATLAB=OFF",
             "-DNLOPT_OCTAVE=OFF",
