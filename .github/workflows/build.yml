@@ -22,7 +22,8 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ 3.8, 3.9, '3.10', '3.11' ]
+        # python-version: [ 3.8, 3.9, '3.10', '3.11' ]
+        python-version: [ '3.11' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -39,8 +40,9 @@ jobs:
 
       - name: Build wheels
         run: |
-          python -m pip install -U pip numpy wheel
+          python -m pip install -U pip numpy wheel setuptools
           python setup.py bdist_wheel -d dist
+          ls -al ./dist
 
       - name: Place wheels in artifacts folder
         uses: actions/upload-artifact@v2
@@ -60,15 +62,16 @@ jobs:
         with:
           submodules: true
 
-      - name: Setup Python 3.10
+      - name: Setup Python 3.11
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Build wheels
         env:
-          # only build CPython-3.6 and later and skip 32-bit builds and skip windows
-          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-*
+          # only build CPython-3.8 and later and skip 32-bit builds and skip windows
+          # CIBW_BUILD: cp38-* cp39-* cp310-* cp311-*
+          CIBW_BUILD: cp311-*
           CIBW_SKIP: "*-win* *-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: danielbok/nlopt_manylinux2014_x86_64:latest
@@ -91,7 +94,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
-        python-version: [ 3.8, 3.9, '3.10', '3.11' ]
+        python-version: [ '3.11' ]
 
     steps:
       - name: Checkout repository

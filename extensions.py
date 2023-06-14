@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 import shutil
@@ -80,6 +81,12 @@ class NLOptBuild(build_ext):
 
         # Copy over the important bits
         nlopt_py = build_dir / "extern" / "nlopt" / "src" / "swig" / "nlopt.py"
+
+        logging.info(f"Ext Dir - {ext_dir}\n" + '\n'.join(f'  - {file.as_posix()}' for file in ext_dir.rglob('*')))
+        for folder in [ext_dir, nlopt_py.parent]:
+            logging.info(f'Files in {folder.as_posix()}\n' + '\n'.join(f' - {f.name}' for f in folder.iterdir()))
+
+        logging.info(f"Attempting to copy nlopt.py file from {nlopt_py.parent.as_posix()} to {ext_dir.as_posix()}")
         if not nlopt_py.exists():
             raise RuntimeError("swig python file was not generated")
 
@@ -100,5 +107,5 @@ def create_directory(path: Path):
 
 
 def execute_command(cmd: List[str], cwd: Path, env: Dict[str, str] = os.environ):
-    print(cwd.as_posix(), ':', ' '.join(cmd))
-    check_call(cmd, cwd=cwd, env=env)
+    logging.info(f"Running Command: {cwd.as_posix()}: {' '.join(cmd)}")
+    check_call(cmd, cwd=cwd.as_posix(), env=env)
