@@ -41,8 +41,6 @@ class NLOptBuild(build_ext):
         # - required for auto-detection of auxiliary "native" libs
         ext_dir = Path(self.get_ext_fullpath(ext.name)).parent.absolute()
         _ed = ext_dir.as_posix()
-        if not _ed.endswith(os.path.sep):
-            _ed += os.path.sep
 
         build_dir = create_directory(Path(self.build_temp))
 

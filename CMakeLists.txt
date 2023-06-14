@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0..3.12)
+cmake_minimum_required(VERSION 3.1.0..3.14)
 
 project(nlopt-python)
 
