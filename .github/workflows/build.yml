@@ -22,8 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        # python-version: [ 3.8, 3.9, '3.10', '3.11' ]
-        python-version: [ '3.11' ]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,12 +34,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install SWIG
-        run: choco install swig -y
-
       - name: Build wheels
         run: |
-          python -m pip install -U pip numpy wheel setuptools
+          python -m pip install -U pip numpy swig wheel setuptools
           python setup.py bdist_wheel -d dist
           ls -al ./dist
 
@@ -62,16 +58,16 @@ jobs:
         with:
           submodules: true
 
-      - name: Setup Python 3.6
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
+          python-version: '3.11'
 
       - name: Build wheels
         env:
-          # only build CPython-3.6+ and skip 32-bit builds and skip windows
-          CIBW_BUILD: cp36-*
-          CIBW_SKIP: "*-win* *-manylinux_i686 *-musllinux*"
+          # only build CPython-3.8+ and skip 32-bit builds
+          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-* cp312-*
+          CIBW_SKIP: "*-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
           CIBW_BEFORE_ALL_MACOS: brew install swig
@@ -93,7 +89,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
-        python-version: [ '3.11' ]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
       - name: Checkout repository
