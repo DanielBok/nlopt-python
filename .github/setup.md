@@ -8,7 +8,14 @@ How to Update
    git add extern/
    git commit -m "Update nlopt submodule"
    ```
-2. `[Optional]` If there is a need, update the `ci/nlopt_manylinux2014_x64_64.Dockerfile` image. This is used to build
+
+   * To see the submodule remote location, run the following command
+     ```shell
+     git submodule foreach --recursive git remote get-url origin
+     ```
+     Currently, it points to https://github.com/stevengj/nlopt.git
+
+2. `[Optional]` If there is a need, update the `ci/nlopt_manylinux2014_x86_64.Dockerfile` image. This is used to build
    the linux images
     * This should be done in `image/*` branch as the github action `manylinux-image.yml` will automatically update the
       image in dockerhub on push.
