@@ -58,12 +58,6 @@ class NLOptBuild(build_ext):
         ]
 
         if platform.system() == "Windows":
-            cmd += "-DPYTHON_EXTENSION_MODULE_SUFFIX=.abi3.so"
-        else:
-            cmd += "-DPYTHON_EXTENSION_MODULE_SUFFIX=.abi3.pyd"
-        abi3_flag = "-DPy_LIMITED_API=0x03060000"
-
-        if platform.system() == "Windows":
             cmd.insert(2, f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{self.config.upper()}={_ed}")
 
         execute_command(
@@ -71,7 +65,7 @@ class NLOptBuild(build_ext):
             cwd=build_dir,
             env={
                 **os.environ.copy(),
-                "CXXFLAGS": f'{os.environ.get("CXXFLAGS", "")} -DVERSION_INFO="{self.distribution.get_version()}" {abi3_flag}'
+                "CXXFLAGS": f'{os.environ.get("CXXFLAGS", "")} -DVERSION_INFO="{self.distribution.get_version()}"'
             })
 
         # build the DLL
