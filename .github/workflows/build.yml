@@ -118,6 +118,7 @@ jobs:
 
           # version refers to the python version. So 3.8 -> 38
           version=$(echo ${{ matrix.python-version }} | sed 's/\.//g')
+          version=abi3
 
           # this finds files like
           # nlopt-2.6.2-cp36-cp36m-win_amd64.whl
