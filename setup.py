@@ -25,7 +25,7 @@ class bdist_wheel_abi3(bdist_wheel):
 
         if python.startswith("cp"):
             # on CPython, our wheels are abi3 and compatible back to 3.6
-            return "cp36", "abi3", plat
+            return "cp37", "abi3", plat
 
         return python, abi, plat
 

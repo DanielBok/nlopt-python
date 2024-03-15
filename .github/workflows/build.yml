@@ -22,8 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        # python-version: [ 3.8, 3.9, '3.10', '3.11' ]
-        python-version: [ '3.11' ]
+        python-version: [ '3.7' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,12 +34,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install SWIG
-        run: choco install swig -y
-
       - name: Build wheels
         run: |
-          python -m pip install -U pip numpy wheel setuptools
+          python -m pip install -U pip numpy swig wheel setuptools
           python setup.py bdist_wheel -d dist
           ls -al ./dist
 
@@ -62,15 +58,15 @@ jobs:
         with:
           submodules: true
 
-      - name: Setup Python 3.6
+      - name: Setup Python 3.7
         uses: actions/setup-python@v2
         with:
-          python-version: '3.6'
+          python-version: '3.7'
 
       - name: Build wheels
         env:
-          # only build CPython-3.6+ and skip 32-bit builds and skip windows
-          CIBW_BUILD: cp36-*
+          # only build CPython-3.7+ and skip 32-bit builds and skip windows
+          CIBW_BUILD: cp37-*
           CIBW_SKIP: "*-win* *-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64

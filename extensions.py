@@ -43,6 +43,11 @@ class NLOptBuild(build_ext):
         ext_dir = Path(self.get_ext_fullpath(ext.name)).parent.absolute()
         _ed = ext_dir.as_posix()
 
+        # patch nlopt-python.i for abi3
+        shutil.copy2(ext.source_dir / "extern" / "nlopt-python.i", ext.source_dir / "extern" / "nlopt" / "src" / "swig" / "nlopt-python.i")
+        shutil.copy2(ext.source_dir / "extern" / "CMakeLists.txt", ext.source_dir / "extern" / "nlopt" / "CMakeLists.txt")
+        shutil.copy2(ext.source_dir / "extern" / "src.swig.CMakeLists.txt", ext.source_dir / "extern" / "nlopt" / "src" / "swig" / "CMakeLists.txt")
+
         build_dir = create_directory(Path(self.build_temp))
 
         # package builds in 2 steps, first to compile the nlopt package and second to build the DLL
@@ -58,10 +63,10 @@ class NLOptBuild(build_ext):
         ]
 
         if platform.system() == "Windows":
-            cmd += "-DPYTHON_EXTENSION_MODULE_SUFFIX=.abi3.so"
+            cmd.append("-DPYTHON_EXTENSION_MODULE_SUFFIX=.abi3.so")
         else:
-            cmd += "-DPYTHON_EXTENSION_MODULE_SUFFIX=.abi3.pyd"
-        abi3_flag = "-DPy_LIMITED_API=0x03060000"
+            cmd.append("-DPYTHON_EXTENSION_MODULE_SUFFIX=.abi3.pyd")
+        abi3_flag = "-DPy_LIMITED_API=0x03070000"
 
         if platform.system() == "Windows":
             cmd.insert(2, f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{self.config.upper()}={_ed}")
