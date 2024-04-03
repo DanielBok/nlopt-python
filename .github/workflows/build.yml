@@ -81,7 +81,7 @@ jobs:
       - name: Place wheels in artifacts folder
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-${{ matrix.python-version }}
+          name: ${{ matrix.os }}
           path: ./dist/*.whl
 
   test-wheels:
@@ -147,15 +147,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
 
       - name: Retrieve packages
         uses: actions/download-artifact@v4
         with:
-          name: artifact
           path: dist
 
       - name: Install twine
