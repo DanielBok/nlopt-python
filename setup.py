@@ -5,8 +5,6 @@ from setuptools import setup
 
 from extensions import NLOptBuild, NLOptBuildExtension
 
-from wheel.bdist_wheel import bdist_wheel
-
 with open("README.md") as f:
     long_description = f.read()
 
