@@ -30,7 +30,7 @@ jobs:
           submodules: true
 
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -41,7 +41,7 @@ jobs:
           ls -al ./dist
 
       - name: Place wheels in artifacts folder
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: ./dist/*.whl
 
@@ -59,7 +59,7 @@ jobs:
           submodules: true
 
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -78,7 +78,7 @@ jobs:
           ls -R dist
 
       - name: Place wheels in artifacts folder
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: ./dist/*.whl
 
@@ -97,12 +97,12 @@ jobs:
         with:
           submodules: true
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Retrieve packages
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: dist
 
@@ -130,20 +130,24 @@ jobs:
           pip install ${file}
           python extern/nlopt/test/t_python.py
 
-  deploy:
-    name: deploy packages
+  deploy-test:
+    name: Deploy packages to TestPyPI
     runs-on: ubuntu-latest
     needs: test-wheels
-    if: startsWith(github.ref, 'refs/tags/')
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
     steps:
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Retrieve packages
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: artifact
           path: dist
@@ -151,14 +155,39 @@ jobs:
       - name: Install twine
         run: pip install twine
 
+      - name: List directory
+        run: |
+          ls -ltR
+
       - name: Upload packages to testpypi
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_TEST_UID }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_TEST_PWD }}
-        run: python -m twine upload --skip-existing --repository testpypi dist/*
+          TWINE_USERNAME: ${{ secrets.PYPI_TEST_TOKEN_NAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_TEST_API_TOKEN }}
+        run: python -m twine upload --skip-existing --repository testpypi dist/* --verbose
+
+  deploy:
+    name: Deploy packages to PyPI
+    runs-on: ubuntu-latest
+    needs: test-wheels
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Retrieve packages
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+          path: dist
+
+      - name: Install twine
+        run: pip install twine
 
       - name: Upload packages to pypi
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_UID }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PWD }}
-        run: python -m twine upload --skip-existing dist/*
+          TWINE_USERNAME: ${{ secrets.PYPI_PROD_TOKEN_NAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PROD_API_TOKEN }}
+        run: python -m twine upload --skip-existing dist/* --verbose
