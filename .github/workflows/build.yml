@@ -77,7 +77,22 @@ jobs:
             which swig
           CIBW_BEFORE_BUILD: |
             pip install --upgrade pip
-            pip install numpy swig
+            pip install numpy
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            which swig
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            swig -swiglib
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            swig -swiglib | xargs ls -l
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            echo $SWIG_EXECUTABLE
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            python -c "import numpy;print(numpy.get_include())"
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            export NUMPY_INCLUDE_DIRS=$(python -c "import numpy;print(numpy.get_include())")
+            echo "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
+            echo $NUMPY_INCLUDE_DIRS
         run: |
           python -m pip install -U pip cibuildwheel==2.18.1
           python -m cibuildwheel --output-dir dist
