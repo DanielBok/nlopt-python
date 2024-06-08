@@ -20,6 +20,7 @@ with open(Path(__file__).parent / "extern" / "nlopt" / "CMakeLists.txt") as f:
 setup(
     version=version,
     install_requires=["numpy >=1.18.5"],
+    setup_requires=["numpy >=1.18.5"],
     ext_modules=[NLOptBuildExtension("nlopt._nlopt", version)],
     cmdclass={"build_ext": NLOptBuild},
     zip_safe=False,
