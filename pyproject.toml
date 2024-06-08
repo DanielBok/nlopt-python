@@ -1,0 +1,48 @@
+[project]
+name = "nlopt"
+version = "2.7.1"
+description = "Library for nonlinear optimization, wrapping many algorithms for global and local, constrained or unconstrained, optimization"
+readme = "README.md"
+readme-content-type = "text/markdown"
+authors = [
+    { name = "Daniel Bok", email = "daniel.bok@outlook.com" },
+]
+maintainers = [
+    { name = "Daniel Bok", email = "daniel.bok@outlook.com" },
+]
+license = { text = "MIT" }
+keywords = ["algorithms", "global local constrained unconstrained optimization", "optimization", "non-linear optimization"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+"Documentation" = "https://nlopt.readthedocs.io/en/latest/"
+"Code" = "https://github.com/DanielBok/nlopt-python"
+"Issue tracker" = "https://github.com/DanielBok/nlopt-python/issues"
+
+[project.dependencies]
+python = ">=3.9"
+nlopt = ">= 1.18.5"
+
+[build-system]
+requires = [
+    "setuptools",
+    "numpy >= 1.18.5"
+]
+
