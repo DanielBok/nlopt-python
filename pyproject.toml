@@ -30,15 +30,16 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering",
 ]
+dependencies = [
+    "nlopt >= 1.18.5",
+]
 
 [project.urls]
 "Documentation" = "https://nlopt.readthedocs.io/en/latest/"
 "Code" = "https://github.com/DanielBok/nlopt-python"
 "Issue tracker" = "https://github.com/DanielBok/nlopt-python/issues"
 
-[project.dependencies]
-python = ">=3.9"
-nlopt = ">= 1.18.5"
+
 
 [build-system]
 requires = [
