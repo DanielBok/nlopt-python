@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -66,8 +66,8 @@ jobs:
 
       - name: Build wheels
         env:
-          # only build CPython-3.8+ and skip 32-bit builds
-          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-* cp312-*
+          # only build CPython-3.9+ and skip 32-bit builds
+          CIBW_BUILD: cp39-* cp310-* cp311-* cp312-*
           CIBW_SKIP: "*-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
@@ -91,7 +91,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
-        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12' ]
 
     steps:
       - name: Checkout repository
@@ -122,7 +122,7 @@ jobs:
           # finds path to the right wheel or source file to install later
           os=$(echo ${{ runner.os }} | awk '{print tolower($0)}' | head -c3)
 
-          # version refers to the python version. So 3.8 -> 38
+          # version refers to the python version. So 3.9 -> 39
           version=$(echo ${{ matrix.python-version }} | sed 's/\.//g')
 
           # this finds files like
