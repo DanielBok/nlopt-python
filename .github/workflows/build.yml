@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, macos-14 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -66,8 +66,8 @@ jobs:
 
       - name: Build wheels
         env:
-          # only build CPython-3.8+ and skip 32-bit builds
-          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-* cp312-*
+          # only build CPython-3.9+ and skip 32-bit builds
+          CIBW_BUILD: cp39-* cp310-* cp311-* cp312-* cp313-*
           CIBW_SKIP: "*-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
@@ -90,8 +90,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest ]
-        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
+        os: [ windows-latest, ubuntu-latest, macos-latest, macos-14 ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12' ]
 
     steps:
       - name: Checkout repository
