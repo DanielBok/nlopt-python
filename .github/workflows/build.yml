@@ -125,11 +125,17 @@ jobs:
           # version refers to the python version. So 3.8 -> 38
           version=$(echo ${{ matrix.python-version }} | sed 's/\.//g')
 
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            chunk="windows"
+          else:
+            chunk="${{matrix.os}}"
+          fi
+
           # this finds files like
           # nlopt-2.6.2-cp36-cp36m-win_amd64.whl
           # nlopt-2.6.2-cp36-cp36m-manylinux10_amd64.whl
           # nlopt-2.7.1-cp310-cp310-win_amd64.whl
-          file=$(find dist -name "nlopt-*${version}*${os}*.whl" -type f);
+          file=$(find dist/${chunk} -name "nlopt-*${version}*${os}*.whl" -type f);
 
           echo "Installing file: ${file}"
 
