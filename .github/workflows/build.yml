@@ -2,6 +2,14 @@ name: Build
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build'
+        required: true
+        type: choice
+        options:
+          - master
+          - refs/remotes/**
   push:
     branches:
       - develop/*
