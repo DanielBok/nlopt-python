@@ -167,7 +167,9 @@ jobs:
           path: dist
 
       - name: Install twine
-        run: pip install twine
+        run: |
+          pip install twine
+          pip install -U packaging
 
       - name: Move files to top level directory
         run: |
