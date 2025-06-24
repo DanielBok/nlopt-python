@@ -80,7 +80,7 @@ class NLOptBuild(build_ext):
         ], cwd=build_dir)
 
         # Copy over the important bits
-        nlopt_py = build_dir / "extern" / "nlopt" / "src" / "swig" / "nlopt.py"
+        nlopt_py = build_dir / "extern" / "nlopt" / "src" / "swig" / "python" / "nlopt.py"
 
         logging.info(f"Ext Dir - {ext_dir}\n" + '\n'.join(f'  - {file.as_posix()}' for file in ext_dir.rglob('*')))
         for folder in [ext_dir, nlopt_py.parent]:
