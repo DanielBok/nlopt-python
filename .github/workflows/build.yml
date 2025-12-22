@@ -2,14 +2,6 @@ name: Build
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to build'
-        required: true
-        type: choice
-        options:
-          - master
-          - refs/remotes/**
   push:
     branches:
       - develop/*
@@ -30,7 +22,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -99,7 +91,7 @@ jobs:
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest, macos-13 ]
-        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13' ]
+        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
 
     steps:
       - name: Checkout repository
