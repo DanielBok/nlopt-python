@@ -54,49 +54,64 @@ class NLOptBuild(build_ext):
             "-DNLOPT_GUILE=OFF",
             "-DNLOPT_MATLAB=OFF",
             "-DNLOPT_OCTAVE=OFF",
-            ext.source_dir.as_posix()
+            ext.source_dir.as_posix(),
         ]
 
         if platform.system() == "Windows":
-            cmd.insert(2, f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{self.config.upper()}={_ed}")
+            cmd.insert(
+                2, f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{self.config.upper()}={_ed}"
+            )
 
         execute_command(
             cmd=cmd,
             cwd=build_dir,
             env={
                 **os.environ.copy(),
-                "CXXFLAGS": f'{os.environ.get("CXXFLAGS", "")} -DVERSION_INFO="{self.distribution.get_version()}"'
-            })
+                "CXXFLAGS": f'{os.environ.get("CXXFLAGS", "")} -DVERSION_INFO="{self.distribution.get_version()}"',
+            },
+        )
 
         # build the DLL
-        execute_command([
-            'cmake',
-            '--build',
-            '.',
-            '--config',
-            self.config,
-            "--",
-            "-m" if platform.system() == "Windows" else "-j2"
-        ], cwd=build_dir)
+        execute_command(
+            [
+                "cmake",
+                "--build",
+                ".",
+                "--config",
+                self.config,
+                "--",
+                "-m" if platform.system() == "Windows" else "-j2",
+            ],
+            cwd=build_dir,
+        )
 
         # Copy over the important bits
         nlopt_py = build_dir / "extern" / "nlopt" / "src" / "swig" / "python" / "nlopt.py"
 
-        logging.info(f"Ext Dir - {ext_dir}\n" + '\n'.join(f'  - {file.as_posix()}' for file in ext_dir.rglob('*')))
+        logging.info(
+            f"Ext Dir - {ext_dir}\n"
+            + "\n".join(f"  - {file.as_posix()}" for file in ext_dir.rglob("*"))
+        )
         for folder in [ext_dir, nlopt_py.parent]:
-            logging.info(f'Files in {folder.as_posix()}\n' + '\n'.join(f' - {f.name}' for f in folder.iterdir()))
+            logging.info(
+                f"Files in {folder.as_posix()}\n"
+                + "\n".join(f" - {f.name}" for f in folder.iterdir())
+            )
 
-        logging.info(f"Attempting to copy nlopt.py file from {nlopt_py.parent.as_posix()} to {ext_dir.as_posix()}")
+        logging.info(
+            f"Attempting to copy nlopt.py file from {nlopt_py.parent.as_posix()} to {ext_dir.as_posix()}"
+        )
         if not nlopt_py.exists():
             raise RuntimeError("swig python file was not generated")
 
         shutil.copy2(nlopt_py, ext_dir / "nlopt.py")
-        with open(ext_dir / "__init__.py", 'w') as f:
-            f.write(f"""
-from .nlopt import *
+        with open(ext_dir / "__init__.py", "w") as f:
+            f.write(
+                f"""from .nlopt import *
 
 __version__ = '{ext.version}'
-""".strip() + "\n")
+""".lstrip()
+            )
 
 
 def create_directory(path: Path):
