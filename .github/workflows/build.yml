@@ -11,6 +11,15 @@ on:
   release:
     types: [ published ]
 
+concurrency:
+  cancel-in-progress: false
+  # This creates different concurrency groups depending on the trigger
+  # For PRs: uses the PR number (e.g., "build-pr-123")
+  # For branch pushes: uses the branch name (e.g., "build-develop/feature-x")
+  # For releases: uses the release tag plus a unique run ID so each release runs independently
+  # For manual dispatches: uses a unique run ID so each dispatch runs independently
+  group: ${{ github.event_name == 'pull_request' && format('build-pr-{0}', github.event.pull_request.number) || github.event_name == 'push' && format('build-{0}', github.ref) || github.event_name == 'release' && format('build-release-{0}-{1}', github.event.release.tag_name, github.run_id) || format('build-dispatch-{0}', github.run_id) }}
+
 defaults:
   run:
     shell: bash
