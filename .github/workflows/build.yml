@@ -11,6 +11,9 @@ on:
   release:
     types: [ published ]
 
+env:
+  PYTHON_VERSIONS: "3.10,3.11,3.12,3.13,3.14"
+
 concurrency:
   cancel-in-progress: false
   # This creates different concurrency groups depending on the trigger
@@ -25,13 +28,30 @@ defaults:
     shell: bash
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      python-versions: ${{ steps.set-matrix.outputs.python-versions }}
+      cibw-build: ${{ steps.set-matrix.outputs.cibw-build }}
+    steps:
+      - id: set-matrix
+        run: |
+          # Convert "3.10,3.11,3.12" to ["3.10","3.11","3.12"]
+          python_array=$(echo '["${{ env.PYTHON_VERSIONS }}"]' | sed 's/,/","/g')
+          echo "python-versions=$python_array" >> $GITHUB_OUTPUT
+          
+          # Convert "3.10,3.11,3.12" to "cp310-* cp311-* cp312-*"
+          cibw=$(echo "${{ env.PYTHON_VERSIONS }}" | sed 's/\.//g; s/,/ /g; s/\([0-9]*\)/cp\1-*/g')
+          echo "cibw-build=$cibw" >> $GITHUB_OUTPUT
+
   build_wheels_windows:
     name: Build wheels on Windows
+    needs: setup
     runs-on: windows-latest
     strategy:
       fail-fast: False
       matrix:
-        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
+        python-version: ${{ fromJSON(needs.setup.outputs.python-versions) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,6 +77,7 @@ jobs:
 
   build_wheels_unix:
     name: Build wheels on ${{ matrix.os }}
+    needs: setup
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: False
@@ -75,8 +96,8 @@ jobs:
 
       - name: Build wheels
         env:
-          # only build CPython-3.9+ and skip 32-bit builds
-          CIBW_BUILD: cp39-* cp310-* cp311-* cp312-* cp313-*
+          # only build CPython-3.10+ and skip 32-bit builds
+          CIBW_BUILD: ${{ needs.setup.outputs.cibw-build }}
           CIBW_SKIP: "*-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
@@ -95,12 +116,12 @@ jobs:
 
   test-wheels:
     name: Test wheels
-    needs: [ build_wheels_windows, build_wheels_unix ]
+    needs: [ setup, build_wheels_windows, build_wheels_unix ]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ windows-latest, ubuntu-latest, macos-latest, macos-14 ]
-        python-version: [ '3.10', '3.11', '3.12', '3.13', '3.14' ]
+        python-version: ${{ fromJSON(needs.setup.outputs.python-versions) }}
 
     steps:
       - name: Checkout repository
