@@ -139,6 +139,11 @@ jobs:
           else
             chunk="${{matrix.os}}"
           fi
+          
+          echo "Runner OS: ${{ runner.os }}"
+          echo "os       : ${os}"
+          echo "version  : ${version}"
+          echo "chunk    : ${chunk}"
 
           # this finds files like
           # nlopt-2.6.2-cp36-cp36m-win_amd64.whl
