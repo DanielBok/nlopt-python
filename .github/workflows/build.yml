@@ -82,7 +82,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        os: [ ubuntu-latest, macos-latest, macos-14 ]
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-14 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -120,7 +120,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest, macos-14 ]
+        os: [ windows-latest, ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-14 ]
         python-version: ${{ fromJSON(needs.setup.outputs.python-versions) }}
 
     steps:
