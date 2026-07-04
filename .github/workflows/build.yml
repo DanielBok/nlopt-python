@@ -82,7 +82,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        os: [ ubuntu-latest, macos-latest, macos-14 ]
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-14 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -101,6 +101,7 @@ jobs:
           CIBW_SKIP: "*-manylinux_i686 *-musllinux*"
           # use latest build
           CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
+          CIBW_MANYLINUX_AARCH64_IMAGE: quay.io/pypa/manylinux_2_28_aarch64
           CIBW_BEFORE_ALL_MACOS: brew install swig
           CIBW_BEFORE_BUILD: pip install numpy swig
         run: |
@@ -120,7 +121,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest, macos-14 ]
+        os: [ windows-latest, ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-14 ]
         python-version: ${{ fromJSON(needs.setup.outputs.python-versions) }}
 
     steps:
