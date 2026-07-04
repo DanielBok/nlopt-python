@@ -99,8 +99,9 @@ jobs:
           # only build CPython-3.10+ and skip 32-bit builds
           CIBW_BUILD: ${{ needs.setup.outputs.cibw-build }}
           CIBW_SKIP: "*-manylinux_i686 *-musllinux*"
-          # use latest build
-          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux2014_x86_64
+          # use latest build; manylinux_2_28 ships gcc>=12 (manylinux2014's
+          # gcc 10.2 is too old for numpy>=2.5 source builds)
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_28_x86_64
           CIBW_MANYLINUX_AARCH64_IMAGE: quay.io/pypa/manylinux_2_28_aarch64
           CIBW_BEFORE_ALL_MACOS: brew install swig
           CIBW_BEFORE_BUILD: pip install numpy swig
