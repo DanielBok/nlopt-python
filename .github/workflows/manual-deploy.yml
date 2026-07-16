@@ -11,6 +11,10 @@ on:
           - pypi
           - none
         default: testpypi
+      version-suffix:
+        description: "Optional version suffix, e.g. 'dev123' or 'rc1' -> 2.11.0.dev123. Leave blank to auto-generate one for testpypi."
+        type: string
+        default: ""
       os_windows-latest:
         description: "OS: windows-latest"
         type: boolean
@@ -116,3 +120,4 @@ jobs:
       os: ${{ needs.package-args.outputs.os }}
       python-versions: ${{ needs.package-args.outputs.python-versions }}
       target: ${{ inputs.target }}
+      version-suffix: ${{ inputs['version-suffix'] }}

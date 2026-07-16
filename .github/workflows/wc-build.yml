@@ -15,6 +15,10 @@ on:
         description: "Where to publish: pypi, testpypi, or none"
         type: string
         default: none
+      version-suffix:
+        description: "Optional version suffix, e.g. 'dev123' or 'rc1' -> 2.11.0.dev123. If blank and target=testpypi, one is auto-generated."
+        type: string
+        default: ""
 
 defaults:
   run:
@@ -53,16 +57,21 @@ jobs:
 
       - name: Ensure version is not already published on PyPI
         if: inputs.target == 'pypi'
+        env:
+          VERSION_SUFFIX_INPUT: ${{ inputs['version-suffix'] }}
         run: |
           major=$(grep -oP 'NLOPT_MAJOR_VERSION\s+"\K[^"]+' extern/nlopt/CMakeLists.txt)
           minor=$(grep -oP 'NLOPT_MINOR_VERSION\s+"\K[^"]+' extern/nlopt/CMakeLists.txt)
           bugfix=$(grep -oP 'NLOPT_BUGFIX_VERSION\s+"\K[^"]+' extern/nlopt/CMakeLists.txt)
           version="$major.$minor.$bugfix"
+          if [[ -n "$VERSION_SUFFIX_INPUT" ]]; then
+            version="$version.$VERSION_SUFFIX_INPUT"
+          fi
           echo "Resolved package version: $version"
 
           status=$(curl -s -o /dev/null -w '%{http_code}' "https://pypi.org/pypi/nlopt/$version/json")
           if [[ "$status" == "200" ]]; then
-            echo "::error::nlopt $version is already published on PyPI. Bump NLOPT_MAJOR_VERSION/NLOPT_MINOR_VERSION/NLOPT_BUGFIX_VERSION in extern/nlopt/CMakeLists.txt before publishing another release."
+            echo "::error::nlopt $version is already published on PyPI. Bump NLOPT_MAJOR_VERSION/NLOPT_MINOR_VERSION/NLOPT_BUGFIX_VERSION in extern/nlopt/CMakeLists.txt, or pass a distinct version-suffix, before publishing again."
             exit 1
           fi
 
@@ -70,6 +79,7 @@ jobs:
         env:
           OS_LIST_INPUT: ${{ inputs.os }}
           PYTHON_VERSIONS_INPUT: ${{ inputs.python-versions }}
+          VERSION_SUFFIX_INPUT: ${{ inputs['version-suffix'] }}
         run: |
           # Convert "3.10,3.11,3.12" to ["3.10","3.11","3.12"]
           python_array=$(echo "[\"$PYTHON_VERSIONS_INPUT\"]" | sed 's/,/","/g')
@@ -100,9 +110,12 @@ jobs:
             echo "build-windows=false" >> $GITHUB_OUTPUT
           fi
 
-          # testpypi releases are immutable after 14 days, so give every testpypi
-          # dry-run a unique dev version to avoid ever colliding with an old one.
-          if [[ "${{ inputs.target }}" == "testpypi" ]]; then
+          # An explicit version-suffix always wins. Otherwise, testpypi releases are
+          # immutable after 14 days, so auto-generate a unique dev version for every
+          # testpypi dry-run to avoid ever colliding with an old one.
+          if [[ -n "$VERSION_SUFFIX_INPUT" ]]; then
+            echo "version-suffix=$VERSION_SUFFIX_INPUT" >> $GITHUB_OUTPUT
+          elif [[ "${{ inputs.target }}" == "testpypi" ]]; then
             echo "version-suffix=dev${{ github.run_id }}" >> $GITHUB_OUTPUT
           else
             echo "version-suffix=" >> $GITHUB_OUTPUT
