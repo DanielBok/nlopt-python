@@ -1,0 +1,118 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to publish"
+        type: choice
+        options:
+          - testpypi
+          - pypi
+          - none
+        default: testpypi
+      os_windows-latest:
+        description: "OS: windows-latest"
+        type: boolean
+        default: false
+      os_ubuntu-latest:
+        description: "OS: ubuntu-latest"
+        type: boolean
+        default: false
+      os_ubuntu-24.04-arm:
+        description: "OS: ubuntu-24.04-arm"
+        type: boolean
+        default: false
+      os_macos-latest:
+        description: "OS: macos-latest"
+        type: boolean
+        default: false
+      os_macos-14:
+        description: "OS: macos-14"
+        type: boolean
+        default: false
+      py3.10:
+        description: "Python 3.10"
+        type: boolean
+        default: false
+      py3.11:
+        description: "Python 3.11"
+        type: boolean
+        default: false
+      py3.12:
+        description: "Python 3.12"
+        type: boolean
+        default: false
+      py3.13:
+        description: "Python 3.13"
+        type: boolean
+        default: false
+      py3.14:
+        description: "Python 3.14"
+        type: boolean
+        default: false
+
+concurrency:
+  cancel-in-progress: false
+  group: manual-deploy
+
+jobs:
+  package-args:
+    name: Package dispatch inputs
+    runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.pack.outputs.os }}
+      python-versions: ${{ steps.pack.outputs.python-versions }}
+    steps:
+      - id: pack
+        env:
+          OS_WINDOWS_LATEST: ${{ inputs['os_windows-latest'] }}
+          OS_UBUNTU_LATEST: ${{ inputs['os_ubuntu-latest'] }}
+          OS_UBUNTU_ARM: ${{ inputs['os_ubuntu-24.04-arm'] }}
+          OS_MACOS_LATEST: ${{ inputs['os_macos-latest'] }}
+          OS_MACOS_14: ${{ inputs['os_macos-14'] }}
+          PY_310: ${{ inputs['py3.10'] }}
+          PY_311: ${{ inputs['py3.11'] }}
+          PY_312: ${{ inputs['py3.12'] }}
+          PY_313: ${{ inputs['py3.13'] }}
+          PY_314: ${{ inputs['py3.14'] }}
+        run: |
+          os_list=""
+          [[ "$OS_WINDOWS_LATEST" == "true" ]] && os_list="$os_list,windows-latest"
+          [[ "$OS_UBUNTU_LATEST" == "true" ]] && os_list="$os_list,ubuntu-latest"
+          [[ "$OS_UBUNTU_ARM" == "true" ]] && os_list="$os_list,ubuntu-24.04-arm"
+          [[ "$OS_MACOS_LATEST" == "true" ]] && os_list="$os_list,macos-latest"
+          [[ "$OS_MACOS_14" == "true" ]] && os_list="$os_list,macos-14"
+          os_list="${os_list#,}"
+
+          py_list=""
+          [[ "$PY_310" == "true" ]] && py_list="$py_list,3.10"
+          [[ "$PY_311" == "true" ]] && py_list="$py_list,3.11"
+          [[ "$PY_312" == "true" ]] && py_list="$py_list,3.12"
+          [[ "$PY_313" == "true" ]] && py_list="$py_list,3.13"
+          [[ "$PY_314" == "true" ]] && py_list="$py_list,3.14"
+          py_list="${py_list#,}"
+
+          if [[ -z "$os_list" ]]; then
+            echo "::error::Select at least one OS checkbox before dispatching."
+            exit 1
+          fi
+          if [[ -z "$py_list" ]]; then
+            echo "::error::Select at least one Python version checkbox before dispatching."
+            exit 1
+          fi
+
+          echo "os=$os_list" >> $GITHUB_OUTPUT
+          echo "python-versions=$py_list" >> $GITHUB_OUTPUT
+
+  deploy:
+    name: Build, test, and deploy
+    needs: package-args
+    uses: ./.github/workflows/wc-build.yml
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      os: ${{ needs.package-args.outputs.os }}
+      python-versions: ${{ needs.package-args.outputs.python-versions }}
+      target: ${{ inputs.target }}
