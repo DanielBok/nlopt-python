@@ -4,10 +4,14 @@ on:
   pull_request:
     branches:
       - master
+  release:
+    types: [ published ]
 
 concurrency:
   cancel-in-progress: false
-  group: build-pr-${{ github.event.pull_request.number }}
+  # PRs get one group per PR number; releases get one group per tag, so a release
+  # build never queues behind or cancels an unrelated PR build.
+  group: ${{ github.event_name == 'pull_request' && format('build-pr-{0}', github.event.pull_request.number) || format('build-release-{0}', github.event.release.tag_name) }}
 
 jobs:
   build:
@@ -19,4 +23,5 @@ jobs:
     with:
       os: "windows-latest,ubuntu-latest,ubuntu-24.04-arm,macos-latest,macos-14"
       python-versions: "3.10,3.11,3.12,3.13,3.14"
-      target: testpypi
+      # PRs are a dry-run publish to testpypi; a published release goes to prod pypi.
+      target: ${{ github.event_name == 'release' && 'pypi' || 'testpypi' }}
