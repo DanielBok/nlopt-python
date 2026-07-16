@@ -23,5 +23,6 @@ jobs:
     with:
       os: "windows-latest,ubuntu-latest,ubuntu-24.04-arm,macos-latest,macos-14"
       python-versions: "3.10,3.11,3.12,3.13,3.14"
-      # PRs are a dry-run publish to testpypi; a published release goes to prod pypi.
-      target: ${{ github.event_name == 'release' && 'pypi' || 'testpypi' }}
+      # PRs just build/test wheels, no publish; a published release goes to prod pypi.
+      # A testpypi dry-run publish is available on demand via manual-deploy.yml.
+      target: ${{ github.event_name == 'release' && 'pypi' || 'none' }}
