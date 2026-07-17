@@ -26,7 +26,7 @@ if version_suffix:
 
 setup(
     version=version,
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     install_requires=["numpy >=2,<3"],
     setup_requires=["numpy >=2,<3"],
     ext_modules=[NLOptBuildExtension("nlopt._nlopt", version)],
