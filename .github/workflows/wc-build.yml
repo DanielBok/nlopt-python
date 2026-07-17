@@ -273,10 +273,7 @@ jobs:
     name: Deploy packages
     runs-on: ubuntu-latest
     needs: test-wheels
-    # Fork PRs never get an OIDC token from GitHub (ACTIONS_ID_TOKEN_REQUEST_TOKEN is
-    # withheld regardless of the permissions below), so trusted publishing would fail
-    # outright for them - skip deploy rather than let it error out.
-    if: inputs.target != 'none' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: inputs.target != 'none'
     environment:
       name: ${{ inputs.target == 'pypi' && 'prod' || 'dev' }}
     permissions:
