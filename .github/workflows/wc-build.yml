@@ -274,8 +274,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: test-wheels
     if: inputs.target != 'none'
-    environment:
-      name: ${{ inputs.target == 'pypi' && 'prod' || 'dev' }}
     permissions:
       id-token: write
       contents: read
