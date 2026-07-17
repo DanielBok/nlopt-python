@@ -1,0 +1,64 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # 03:00 UTC daily
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+concurrency:
+  cancel-in-progress: false
+  group: nightly-build
+
+jobs:
+  build:
+    name: Build & test wheels, deploy to testpypi
+    uses: ./.github/workflows/wc-build.yml
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      os: "windows-latest,ubuntu-latest,ubuntu-24.04-arm,macos-latest,macos-14"
+      python-versions: "3.10,3.11,3.12,3.13,3.14"
+      target: testpypi
+
+  notify-on-failure:
+    name: Open/update issue on failure
+    needs: build
+    if: failure()
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Find or create failure issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = "Nightly build failing";
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = `The nightly build workflow failed on ${new Date().toISOString().slice(0, 10)}.\n\nSee the failed run: ${runUrl}`;
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "nightly-build-failure",
+            });
+
+            if (issues.length > 0) {
+              const issue = issues[0];
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ["nightly-build-failure"],
+              });
+            }
