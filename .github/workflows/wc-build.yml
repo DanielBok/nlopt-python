@@ -242,10 +242,15 @@ jobs:
           ls -R dist
 
           # finds path to the right wheel or source file to install later
-          os=$(echo ${{ runner.os }} | awk '{print tolower($0)}' | head -c3)
 
           # version refers to the python version. So 3.8 -> 38
           version=$(echo ${{ matrix.python-version }} | sed 's/\.//g')
+
+          # python tag, e.g. cp310. Wheel filenames embed this as -cp310-cp310-,
+          # so anchoring on it (rather than a bare version substring) avoids false
+          # matches against the dev-version-suffix digits (e.g. run id containing
+          # "314" would otherwise match cp314 wheels while testing 3.10 too).
+          cptag="cp${version}"
 
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
             chunk="windows-*"
@@ -254,15 +259,22 @@ jobs:
           fi
 
           echo "Runner OS: ${{ runner.os }}"
-          echo "os       : ${os}"
           echo "version  : ${version}"
+          echo "cptag    : ${cptag}"
           echo "chunk    : ${chunk}"
 
           # this finds files like
           # nlopt-2.6.2-cp36-cp36m-win_amd64.whl
           # nlopt-2.6.2-cp36-cp36m-manylinux10_amd64.whl
           # nlopt-2.7.1-cp310-cp310-win_amd64.whl
-          file=$(find dist/${chunk} -name "nlopt-*${version}*${os}*.whl" -type f);
+          file=$(find dist/${chunk} -name "nlopt-*-${cptag}-${cptag}*.whl" -type f);
+          count=$(echo "${file}" | grep -c . || true)
+
+          if [[ "${count}" -ne 1 ]]; then
+            echo "::error::Expected exactly 1 matching wheel, found ${count}:"
+            echo "${file}"
+            exit 1
+          fi
 
           echo "Installing file: ${file}"
 
