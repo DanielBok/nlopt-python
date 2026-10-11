@@ -38,6 +38,7 @@ class BuildCommandsTest(unittest.TestCase):
                          patch.dict(os.environ, {'CMAKE_BUILD_PARALLEL_LEVEL': '2'}):
                         command.build_extension(extension)
                     config = 'Debug' if debug else 'Release'
+                    self.assertIn('-DNLOPT_JAVA=OFF', calls[0])
                     self.assertIn(f'-DCMAKE_BUILD_TYPE={config}', calls[0])
                     self.assertEqual(calls[1], ['cmake', '--build', '.', '--config', config, '--parallel', '2'])
 

@@ -53,6 +53,7 @@ class NLOptBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={_ed}",
             f"-DPython_EXECUTABLE={sys.executable}",
             "-DNLOPT_GUILE=OFF",
+            "-DNLOPT_JAVA=OFF",
             "-DNLOPT_MATLAB=OFF",
             "-DNLOPT_OCTAVE=OFF",
             ext.source_dir.as_posix(),
