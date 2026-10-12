@@ -49,9 +49,11 @@ class NLOptBuild(build_ext):
         cmd = [
             "cmake",
             "-LAH",
+            f"-DCMAKE_BUILD_TYPE={self.config}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={_ed}",
             f"-DPython_EXECUTABLE={sys.executable}",
             "-DNLOPT_GUILE=OFF",
+            "-DNLOPT_JAVA=OFF",
             "-DNLOPT_MATLAB=OFF",
             "-DNLOPT_OCTAVE=OFF",
             ext.source_dir.as_posix(),
@@ -79,8 +81,8 @@ class NLOptBuild(build_ext):
                 ".",
                 "--config",
                 self.config,
-                "--",
-                "-m" if platform.system() == "Windows" else "-j2",
+                "--parallel",
+                os.environ.get("CMAKE_BUILD_PARALLEL_LEVEL", "2"),
             ],
             cwd=build_dir,
         )
