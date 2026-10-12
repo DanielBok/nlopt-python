@@ -3,8 +3,6 @@ name: Windows ARM64 wheels
 on:
   pull_request:
     branches: [master]
-  push:
-    branches: [ci/windows-arm64-wheels]
   workflow_dispatch:
   release:
     types: [published]
@@ -19,7 +17,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.12', '3.13']
+        # Same versions as build.yml, except 3.10: NumPy (needed to build and
+        # test) publishes no Windows ARM64 wheels for CPython 3.10.
+        python-version: ['3.11', '3.12', '3.13', '3.14']
     env:
       CMAKE_GENERATOR: Ninja
       CMAKE_BUILD_PARALLEL_LEVEL: '2'
