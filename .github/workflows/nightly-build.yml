@@ -19,7 +19,7 @@ jobs:
       contents: read
     with:
       os: "windows-latest,ubuntu-latest,ubuntu-24.04-arm,macos-latest,macos-14"
-      python-versions: "3.10,3.11,3.12,3.13,3.14"
+      python-versions: "3.10,3.11,3.12,3.13,3.14,3.15"
       target: testpypi
 
   notify-on-failure:
