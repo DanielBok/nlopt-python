@@ -55,6 +55,10 @@ on:
         description: "Python 3.14"
         type: boolean
         default: false
+      py3.15:
+        description: "Python 3.15"
+        type: boolean
+        default: false
 
 concurrency:
   cancel-in-progress: false
@@ -80,6 +84,7 @@ jobs:
           PY_312: ${{ inputs['py3.12'] }}
           PY_313: ${{ inputs['py3.13'] }}
           PY_314: ${{ inputs['py3.14'] }}
+          PY_315: ${{ inputs['py3.15'] }}
         run: |
           os_list=""
           [[ "$OS_WINDOWS_LATEST" == "true" ]] && os_list="$os_list,windows-latest"
@@ -95,6 +100,7 @@ jobs:
           [[ "$PY_312" == "true" ]] && py_list="$py_list,3.12"
           [[ "$PY_313" == "true" ]] && py_list="$py_list,3.13"
           [[ "$PY_314" == "true" ]] && py_list="$py_list,3.14"
+          [[ "$PY_315" == "true" ]] && py_list="$py_list,3.15"
           py_list="${py_list#,}"
 
           if [[ -z "$os_list" ]]; then
